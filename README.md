@@ -1,2 +1,0 @@
-# equipmentgram
-EquipmentGram Website 
