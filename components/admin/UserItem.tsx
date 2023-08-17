@@ -5,22 +5,9 @@ import {
   XCircleIcon,
 } from "@heroicons/react/20/solid";
 import classNames from "classnames";
-import React, { useMemo } from "react";
-import { createEditor } from "slate";
-import { Editable, Slate } from "slate-react";
-import { InspectionRequestObjectWithId } from "../../lib/network/inspection-requests";
-import {
-  useGetInspectors,
-  useGetUser,
-  UserType,
-  UserWithId,
-  useSetUser,
-  useSetUserType,
-} from "../../lib/network/users";
-import { clipObject, sortedEntries } from "../../lib/utils";
-import { TextEditor } from "../forms/TextEditor";
+import React from "react";
+import { UserType, UserWithId, useSetUserType } from "../../lib/network/users";
 import { ComboboxItem, PlainComboBox } from "./PlainComboBox";
-import { Person, UserComboBox } from "./UserComboBox";
 
 interface UserProps {
   user: UserWithId;
@@ -42,7 +29,7 @@ export function UserItem(props: UserProps) {
       className={classNames(
         "cursor-pointer transition-all duration-300 ease-in-out",
         expanded ? "max-h-content pb-10" : "h-[80px]",
-        emphasize ? "bg-gray-100" : ""
+        emphasize ? "bg-gray-100" : "",
       )}
     >
       <div
@@ -50,23 +37,23 @@ export function UserItem(props: UserProps) {
         className="block hover:bg-gray-50"
       >
         <div className="flex items-center px-2 py-4 sm:px-6">
-          <div className="flex min-w-0 flex-1 items-center">
+          <div className="flex items-center flex-1 min-w-0">
             <div className="flex-shrink-0">
               <img
-                className="h-12 w-12 rounded-full hidden md:block"
+                className="hidden w-12 h-12 rounded-full md:block"
                 src={user?.photoURL || ""}
                 alt=""
               />
             </div>
-            <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+            <div className="flex-1 min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
               <div>
-                <p className="truncate text-sm font-medium text-indigo-600">
+                <p className="text-sm font-medium text-indigo-600 truncate">
                   {user?.display_name}{" "}
                   <span className="text-body-color ml-[2px] font-light text-sm">
                     ({user?.email})
                   </span>
                 </p>
-                <p className="mt-2 flex items-center text-sm text-gray-500">
+                <p className="flex items-center mt-2 text-sm text-gray-500">
                   <UserIcon
                     className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                     aria-hidden="true"
@@ -85,7 +72,7 @@ export function UserItem(props: UserProps) {
                   <p className="text-sm text-gray-900">
                     {user.phoneNumber || "No phone number"}
                   </p>
-                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                  <p className="flex items-center mt-2 text-sm text-gray-500">
                     {user.emailVerified ? (
                       <CheckCircleIcon
                         className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
@@ -107,7 +94,7 @@ export function UserItem(props: UserProps) {
             <ChevronRightIcon
               className={classNames(
                 "h-5 w-5 text-gray-400 transition-all duration-300 ease-in-out transform",
-                expanded ? "rotate-90" : "rotate-0"
+                expanded ? "rotate-90" : "rotate-0",
               )}
               aria-hidden="true"
             />
@@ -118,7 +105,7 @@ export function UserItem(props: UserProps) {
       <div
         className={classNames(
           "mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8",
-          expanded ? "block" : "hidden"
+          expanded ? "block" : "hidden",
         )}
       >
         <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">

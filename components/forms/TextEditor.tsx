@@ -45,7 +45,7 @@ export const TextEditor: React.FC<Props> = ({ editor, initialValue }) => {
       // const newPlainTextValue = Editor.string(editor, newValue);
       // setCharacterCount(newPlainTextValue.length);
     },
-    [editor]
+    [editor],
   );
 
   const handleFormatBold = () => {
@@ -103,7 +103,7 @@ export const TextEditor: React.FC<Props> = ({ editor, initialValue }) => {
     Editor.setNodes(
       editor,
       { type: isActive ? "paragraph" : "numbered-list" },
-      { match: (n) => Editor.isBlock(editor, n) }
+      { match: (n) => Editor.isBlock(editor, n) },
     );
   };
 
@@ -116,7 +116,7 @@ export const TextEditor: React.FC<Props> = ({ editor, initialValue }) => {
     Editor.setNodes(
       editor,
       { type: isActive ? "paragraph" : "bulleted-list" },
-      { match: (n) => Editor.isBlock(editor, n) }
+      { match: (n) => Editor.isBlock(editor, n) },
     );
   };
 
@@ -124,7 +124,7 @@ export const TextEditor: React.FC<Props> = ({ editor, initialValue }) => {
     Editor.setNodes(
       editor,
       { alignment },
-      { match: (n) => ReactEditor.isEditor(n) || Editor.isBlock(editor, n) }
+      { match: (n) => ReactEditor.isEditor(n) || Editor.isBlock(editor, n) },
     );
   };
 

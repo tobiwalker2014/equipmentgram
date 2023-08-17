@@ -46,23 +46,23 @@ function Profile() {
             >
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black whitespace-nowrap">
-                  {user.claims.name}
+                  {userData?.display_name}
                 </span>
                 <span className="block text-xs text-body-color">
                   {userData?.type || "unknown"}
                 </span>
               </span>
 
-              <span className="h-11 w-11 rounded-full border border-stroke bg-gray p-1">
+              <span className="p-1 border rounded-full h-11 w-11 border-stroke bg-gray">
                 <img
                   src={user.claims.picture}
                   alt="User"
-                  className="h-full w-full rounded-full object-cover object-center"
+                  className="object-cover object-center w-full h-full rounded-full"
                 />
               </span>
 
               <svg
-                className="fill-body hidden duration-150 ease-linear sm:block"
+                className="hidden duration-150 ease-linear fill-body sm:block"
                 width={12}
                 height={8}
                 fill="#000"
@@ -156,7 +156,6 @@ function Profile() {
                       Account Settings
                     </Link>
                   </li>
-
                 </ul>
 
                 <button
@@ -204,7 +203,7 @@ function Navbar() {
         onClick={() => setNavbarOpen(!navbarOpen)}
         className={classNames(
           "ring-primary/20 absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] focus:ring-1 lg:hidden",
-          navbarOpen && "navbarTogglerActive"
+          navbarOpen && "navbarTogglerActive",
         )}
       >
         <span className="bg-body-color relative my-[6px] block h-[2px] w-[30px]"></span>
@@ -216,14 +215,14 @@ function Navbar() {
         // id="navbarCollapse"
         className={classNames(
           "absolute right-4 top-full w-full max-w-[250px] justify-center rounded-lg bg-white py-5 px-6 shadow lg:static lg:flex lg:w-full lg:max-w-full lg:bg-transparent lg:py-0 lg:shadow-none",
-          !navbarOpen && "hidden"
+          !navbarOpen && "hidden",
         )}
       >
         <ul className="block lg:flex">
           <li>
             <Link
               href="/"
-              className="text-dark hover:text-primary flex py-2 text-base font-medium lg:mx-6 lg:inline-flex lg:py-6"
+              className="flex py-2 text-base font-medium text-dark hover:text-primary lg:mx-6 lg:inline-flex lg:py-6"
             >
               Home
             </Link>
@@ -231,7 +230,7 @@ function Navbar() {
           {/* <li>
             <Link
               href="/"
-              className="text-dark hover:text-primary flex py-2 text-base font-medium lg:mx-6 lg:inline-flex lg:py-6"
+              className="flex py-2 text-base font-medium text-dark hover:text-primary lg:mx-6 lg:inline-flex lg:py-6"
             >
               About Us
             </Link>
@@ -239,7 +238,7 @@ function Navbar() {
           <li>
             <Link
               href="/"
-              className="text-dark hover:text-primary flex py-2 text-base font-medium lg:mx-6 lg:inline-flex lg:py-6"
+              className="flex py-2 text-base font-medium text-dark hover:text-primary lg:mx-6 lg:inline-flex lg:py-6"
             >
               Services
             </Link>
@@ -249,7 +248,7 @@ function Navbar() {
               <li>
                 <Link
                   href="/admin/inspection-requests"
-                  className="text-dark hover:text-primary flex py-2 text-base font-medium lg:mx-6 lg:inline-flex lg:py-6"
+                  className="flex py-2 text-base font-medium text-dark hover:text-primary lg:mx-6 lg:inline-flex lg:py-6"
                 >
                   Admin
                 </Link>
@@ -277,16 +276,16 @@ export default function Header(props: any) {
       {/* ALERT */}
       {/* <div
         x-show="showAlert"
-        className="from-primary to-secondary w-full bg-gradient-to-r py-3"
+        className="w-full py-3 from-primary to-secondary bg-gradient-to-r"
       >
         <div className="container mx-auto">
           <div className="relative w-full">
-            <p className="text-center text-sm font-medium text-white">
+            <p className="text-sm font-medium text-center text-white">
               50% Flat Discount on TailGrids UI - Grab it Now!
             </p>
             <button
               // @click="showAlert = false"
-              className="absolute right-0 top-1/2 -translate-y-1/2"
+              className="absolute right-0 -translate-y-1/2 top-1/2"
             >
               <svg
                 width="24"
@@ -322,28 +321,28 @@ export default function Header(props: any) {
           </div>
         </div>
       </div> */}
-      <header className="flex w-full items-center bg-white">
-        <div className="container mx-auto z-50">
-          <div className="relative -mx-4 flex items-center justify-between">
-            <div className="w-60 max-w-full px-4">
+      <header className="flex items-center w-full bg-white">
+        <div className="container z-50 mx-auto">
+          <div className="relative flex items-center justify-between -mx-4">
+            <div className="max-w-full px-4 w-60">
               <Link href="/" className="block w-full py-5 lg:py-3">
                 <img
                   src="https://cdn.discordapp.com/attachments/1054428224114938036/1080150562282160279/EquipmentGram-A_1.png"
                   alt="logo"
-                  className="w-full site-logo" />
+                  className="w-full site-logo"
+                />
               </Link>
             </div>
-            <div className="flex w-full items-center justify-between px-4">
+            <div className="flex items-center justify-between w-full px-4">
               <Navbar />
 
               <div className="justify-end pr-16 sm:flex lg:pr-0">
                 {!user && (
                   <div className="flex justify-end">
-
                     <Link
                       passHref
                       href="/signup"
-                      className="border-primary text-primary hover:bg-primary inline-block whitespace-nowrap rounded-md border py-3 px-10 text-base font-medium transition hover:text-white"
+                      className="inline-block px-10 py-3 text-base font-medium transition border rounded-md border-primary text-primary hover:bg-primary whitespace-nowrap hover:text-white"
                     >
                       Sign Up
                     </Link>
@@ -351,11 +350,10 @@ export default function Header(props: any) {
                     <Link
                       passHref
                       href="/signin"
-                      className="border-primary text-primary hover:bg-primary inline-block whitespace-nowrap rounded-md border py-3 px-10 text-base font-medium transition hover:text-white"
+                      className="inline-block px-10 py-3 text-base font-medium transition border rounded-md border-primary text-primary hover:bg-primary whitespace-nowrap hover:text-white"
                     >
                       Sign In
                     </Link>
-
                   </div>
                 )}
                 <Profile />
@@ -367,40 +365,40 @@ export default function Header(props: any) {
     </div>
   );
 
-//  return (
-//     <div className="flex h-full flex-row">
-//       <div className="flex-1 my-auto">
-//         <Link href="/">
-//           <button>Home</button>
-//         </Link>
-//       </div>
-//
-//       <div className="m-auto space-x-2">
-//         {!user && !loading ? (
-//           <>
-//             <Link passHref href="/signup">
-//               <button className="m-auto"> Signup</button>
-//             </Link>
-//
-//             <Link passHref href="/signin">
-//               <button className="m-auto"> Signin</button>
-//             </Link>
-//           </>
-//         ) : null}
-//         {user ? (
-//           <>
-//             <Link href="/privatessr">
-//               <button> PrivateSSR</button>
-//             </Link>
-//
-//             <Link href="/private">
-//               <button> Private</button>
-//             </Link>
-//
-//             <button onClick={signOut}> Signout</button>
-//           </>
-//         ) : null}
-//       </div>
-//     </div>
-//  );
+  //  return (
+  //     <div className="flex flex-row h-full">
+  //       <div className="flex-1 my-auto">
+  //         <Link href="/">
+  //           <button>Home</button>
+  //         </Link>
+  //       </div>
+  //
+  //       <div className="m-auto space-x-2">
+  //         {!user && !loading ? (
+  //           <>
+  //             <Link passHref href="/signup">
+  //               <button className="m-auto"> Signup</button>
+  //             </Link>
+  //
+  //             <Link passHref href="/signin">
+  //               <button className="m-auto"> Signin</button>
+  //             </Link>
+  //           </>
+  //         ) : null}
+  //         {user ? (
+  //           <>
+  //             <Link href="/privatessr">
+  //               <button> PrivateSSR</button>
+  //             </Link>
+  //
+  //             <Link href="/private">
+  //               <button> Private</button>
+  //             </Link>
+  //
+  //             <button onClick={signOut}> Signout</button>
+  //           </>
+  //         ) : null}
+  //       </div>
+  //     </div>
+  //  );
 }

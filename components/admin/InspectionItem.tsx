@@ -6,23 +6,13 @@ import {
 } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
-import { createEditor } from "slate";
-import { Editable, Slate } from "slate-react";
+import React, { useEffect, useState } from "react";
 import {
   InspectionRequestObjectWithId,
   useAddInspectorToInspectionRequest,
   useRemoveInspectorFromInspectionRequest,
 } from "../../lib/network/inspection-requests";
-import {
-  useGetInspectors,
-  useGetUser,
-  User,
-  UserType,
-} from "../../lib/network/users";
-import { clipObject, sortedEntries } from "../../lib/utils";
-import { TextEditor } from "../forms/TextEditor";
+import { User, useGetInspectors, useGetUser } from "../../lib/network/users";
 import { Person, UserComboBox } from "./UserComboBox";
 
 interface InspectionProps {
@@ -45,7 +35,7 @@ export function InspectionItem(props: InspectionProps) {
     }
 
     getDoc(inspection.inspectorRef).then((doc) =>
-      setInspector(doc.data() as User)
+      setInspector(doc.data() as User),
     );
   }, [inspection.inspectorRef]);
 
@@ -65,7 +55,7 @@ export function InspectionItem(props: InspectionProps) {
       key={inspection.id}
       className={classNames(
         "cursor-pointer transition-all duration-300 ease-in-out",
-        expanded ? "max-h-content pb-10" : "h-[80px]"
+        expanded ? "max-h-content pb-10" : "h-[80px]",
       )}
     >
       <div
@@ -73,25 +63,25 @@ export function InspectionItem(props: InspectionProps) {
         className="block hover:bg-gray-50"
       >
         <div className="flex items-center px-2 py-4 sm:px-6">
-          <div className="flex min-w-0 flex-1 items-center">
+          <div className="flex items-center flex-1 min-w-0">
             <div className="flex-shrink-0">
               <img
-                className="h-12 w-12 rounded-full hidden md:block"
+                className="hidden w-12 h-12 rounded-full md:block"
                 src={user?.photoURL || ""}
                 alt=""
               />
             </div>
-            <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+            <div className="flex-1 min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
               <div>
                 <Link href={`/admin/users?selected=["${user?.user_id}"]`}>
-                  <p className="truncate text-sm font-medium text-indigo-600 hover:underline">
+                  <p className="text-sm font-medium text-indigo-600 truncate hover:underline">
                     {user?.display_name}{" "}
                     <span className="text-body-color ml-[2px] font-light text-sm">
                       ({user?.email})
                     </span>
                   </p>
                 </Link>
-                <p className="mt-2 flex items-center text-sm text-gray-500">
+                <p className="flex items-center mt-2 text-sm text-gray-500">
                   <CalendarIcon
                     className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                     aria-hidden="true"
@@ -130,7 +120,7 @@ export function InspectionItem(props: InspectionProps) {
                       <div>Inspector Not Yet Assigned</div>
                     )}
                   </p>
-                  <p className="mt-2 flex items-center text-sm text-gray-500">
+                  <p className="flex items-center mt-2 text-sm text-gray-500">
                     <CheckCircleIcon
                       className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
                       aria-hidden="true"
@@ -145,7 +135,7 @@ export function InspectionItem(props: InspectionProps) {
             <ChevronRightIcon
               className={classNames(
                 "h-5 w-5 text-gray-400 transition-all duration-300 ease-in-out transform",
-                expanded ? "rotate-90" : "rotate-0"
+                expanded ? "rotate-90" : "rotate-0",
               )}
               aria-hidden="true"
             />
@@ -156,7 +146,7 @@ export function InspectionItem(props: InspectionProps) {
       <div
         className={classNames(
           "mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8",
-          expanded ? "block" : "hidden"
+          expanded ? "block" : "hidden",
         )}
       >
         <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">

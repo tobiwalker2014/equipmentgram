@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  sendEmailVerification,
 } from "firebase/auth";
 import { useState } from "react";
 import { useAuth } from "../lib/authContext";
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
       router.push(
         addQueryParameters(redirect as string, {
           fromSignin: "true",
-        })
+        }),
       );
     }
   }
@@ -46,15 +47,15 @@ const Home: NextPage = () => {
         const user = userCredential.user;
         console.log("success", user);
         console.log("redirect", redirect);
-        mutateAsync({
-          user_id: user.uid,
-          email: user?.email!,
-          display_name: user?.displayName!,
-          photoURL: user?.photoURL!,
-          phoneNumber: user?.phoneNumber!,
-          emailVerified: user?.emailVerified!,
-          type: UserType.customer,
-        });
+        // mutateAsync({
+        //   user_id: user.uid,
+        //   email: user?.email!,
+        //   display_name: user?.displayName!,
+        //   photoURL: user?.photoURL!,
+        //   phoneNumber: user?.phoneNumber!,
+        //   emailVerified: user?.emailVerified!,
+        //   type: UserType.customer,
+        // });
         doRedirect();
       })
       .catch((error) => {
@@ -86,6 +87,11 @@ const Home: NextPage = () => {
           emailVerified: user?.emailVerified!,
           type: UserType.customer,
         });
+
+        sendEmailVerification(auth.currentUser!).then(() => {
+          console.log("email sent");
+        });
+
         doRedirect();
       })
       .catch((error) => {
@@ -107,7 +113,7 @@ const Home: NextPage = () => {
         <title>Signin</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="m-auto my-24 w-1/3 h-1/3 divide-y-4 space-y-1">
+      <div className="w-1/3 m-auto my-24 space-y-1 divide-y-4 h-1/3">
         {reffererMsg && <p>{reffererMsg}</p>}
         <div className="space-y-1">
           <label>Email</label>
@@ -115,7 +121,7 @@ const Home: NextPage = () => {
           <input
             type="email"
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-current	"
+            className="border border-current "
           />
           <br />
           <label>Password</label>
@@ -123,16 +129,26 @@ const Home: NextPage = () => {
           <input
             type="password"
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-current	"
+            className="border border-current "
           />
           <br />
-          <button className="bg-primary inline-flex items-center justify-center py-2 px-10 text-center text-base font-normal text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => login()}>Login</button>
+          <button
+            className="inline-flex items-center justify-center px-10 py-2 text-base font-normal text-center text-white bg-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+            onClick={() => login()}
+          >
+            Login
+          </button>
           <br />
           <br />
         </div>
         <div>
-        <br />
-          <button className="bg-secondary inline-flex items-center justify-center py-2 px-10 text-center text-base font-normal text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => loginWithGoogle()}>Login with Google</button>
+          <br />
+          <button
+            className="inline-flex items-center justify-center px-10 py-2 text-base font-normal text-center text-white bg-secondary hover:bg-opacity-90 lg:px-8 xl:px-10"
+            onClick={() => loginWithGoogle()}
+          >
+            Login with Google
+          </button>
         </div>
       </div>
     </>

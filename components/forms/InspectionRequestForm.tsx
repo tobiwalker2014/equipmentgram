@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   addQueryParameters,
   toTitleCase,
@@ -75,45 +75,45 @@ export const InspectionRequestForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [date, setDate, wipeDate] = usePersistentState<Dayjs | null>(
     "InspectionRequestForm/date",
-    null
+    null,
   );
   const [notes, _, wipeNotes] = usePersistentState(
     "InspectionRequestForm/notes",
-    () => withReact(createEditor())
+    useMemo(() => withReact(createEditor()), []),
   );
   const [streetAddress, setStreetAddress, wipeStreetAddress] =
     usePersistentState("InspectionRequestForm/streetAddress", "");
   const [city, setCity, wipeCity] = usePersistentState(
     "InspectionRequestForm/city",
-    ""
+    "",
   );
   const [state, setState, wipeState] = usePersistentState(
     "InspectionRequestForm/state",
-    ""
+    "",
   );
   const [postalCode, setPostalCode, wipePostalCode] = usePersistentState(
     "InspectionRequestForm/postalCode",
-    ""
+    "",
   );
   const [firstName, setFirstName, wipeFirstName] = usePersistentState(
     "InspectionRequestForm/firstName",
-    ""
+    "",
   );
   const [lastName, setLastName, wipeLastName] = usePersistentState(
     "InspectionRequestForm/lastName",
-    ""
+    "",
   );
   const [businessName, setBusinessName, wipeBusinessName] = usePersistentState(
     "InspectionRequestForm/businessName",
-    ""
+    "",
   );
   const [email, setEmail, wipeEmail] = usePersistentState(
     "InspectionRequestForm/email",
-    ""
+    "",
   );
   const [mobile, setMobile, wipeMobile] = usePersistentState(
     "InspectionRequestForm/mobile",
-    ""
+    "",
   );
   const [
     equipmentSerialNumber,
@@ -125,7 +125,7 @@ export const InspectionRequestForm = () => {
   const [equipmentType, setEquipmentType, wipeEquipmentType] =
     usePersistentState(
       "InspectionRequestForm/equipmentType",
-      EquipmentType.Backhoe
+      EquipmentType.Backhoe,
     );
   const [
     equipmentManufacturer,
@@ -133,7 +133,7 @@ export const InspectionRequestForm = () => {
     wipeEquipmentManufacturer,
   ] = usePersistentState(
     "InspectionRequestForm/equipmentManufacturer",
-    EquipmentManufacturer.CATERPILLAR_CE
+    EquipmentManufacturer.CATERPILLAR_CE,
   );
 
   const [readFAQReceipt, setReadFAQReceipt, wipeReadFAQReceipt] =
@@ -182,7 +182,7 @@ export const InspectionRequestForm = () => {
       let path = addQueryParameters("/signin", {
         redirect: router.asPath,
         reffererMsg: `${encodeURIComponent(
-          `You must be logged in to submit an inspection request. Please sign in to continue.`
+          `You must be logged in to submit an inspection request. Please sign in to continue.`,
         )}`,
       });
       router.push(path);
@@ -253,7 +253,7 @@ export const InspectionRequestForm = () => {
         <option key={equipmentManufacturer} value={equipmentManufacturer}>
           {equipmentManufacturer}
         </option>
-      )
+      ),
     );
   };
 
@@ -309,16 +309,16 @@ export const InspectionRequestForm = () => {
   return (
     <div className="py-2 lg:py-[10px]">
       <div className="container mx-auto">
-        <div className="-mx-4 flex flex-wrap">
+        <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4">
             <div className="mx-auto mb-[60px] max-w-[510px] text-center lg:mb-20">
-              <span className="text-primary mb-2 block text-lg font-semibold">
+              <span className="block mb-2 text-lg font-semibold text-primary">
                 Read Our FAQ
               </span>
               <h2 className="text-dark mb-4 text-3xl font-bold sm:text-4xl md:text-[40px]">
                 Inspection Request Form
               </h2>
-              <p className="text-body-color text-base">
+              <p className="text-base text-body-color">
                 Fill the form below to request a heavy equipment inspection.
               </p>
             </div>
@@ -327,10 +327,10 @@ export const InspectionRequestForm = () => {
         <div>
           {/* @ts-ignore */}
           <form onSubmit={onSubmit} ref={formRef}>
-            <div className="-mx-4 flex flex-wrap justify-center">
+            <div className="flex flex-wrap justify-center -mx-4">
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     First Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -343,7 +343,7 @@ export const InspectionRequestForm = () => {
                       placeholder="John"
                       className="pl-12 text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4"
                     />
-                    <span className="absolute top-1/2 left-4 -translate-y-1/2">
+                    <span className="absolute -translate-y-1/2 top-1/2 left-4">
                       <svg
                         width="20"
                         height="20"
@@ -372,7 +372,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Last Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -385,7 +385,7 @@ export const InspectionRequestForm = () => {
                       placeholder="Doe"
                       className="pl-12 text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4"
                     />
-                    <span className="absolute top-1/2 left-4 -translate-y-1/2">
+                    <span className="absolute -translate-y-1/2 top-1/2 left-4">
                       <svg
                         width="20"
                         height="20"
@@ -414,7 +414,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Business Name
                   </label>
                   <input
@@ -429,13 +429,13 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <div className="relative mt-1 rounded-md shadow-sm">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <EnvelopeIcon
-                        className="h-5 w-5 text-body-color"
+                        className="w-5 h-5 text-body-color"
                         aria-hidden="true"
                       />
                     </div>
@@ -453,7 +453,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Mobile <span className="text-red-500">*</span>
                   </label>
                   <div className="relative mt-1 rounded-md shadow-sm">
@@ -465,7 +465,7 @@ export const InspectionRequestForm = () => {
                         id="country"
                         name="country"
                         autoComplete="country"
-                        className="h-full rounded-md border-transparent bg-transparent py-0 pl-3 pr-7 text-body-color focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="h-full py-0 pl-3 bg-transparent border-transparent rounded-md pr-7 text-body-color focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       >
                         <option>US</option>
                         <option>CA</option>
@@ -487,7 +487,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Street Address <span className="text-red-500">*</span>
                   </label>
                   <AddressInput
@@ -503,9 +503,9 @@ export const InspectionRequestForm = () => {
                   />
                 </div>
               </div>
-              <div className="w-full px-4 md:w-1/2 flex flex-col md:flex-row gap-3">
+              <div className="flex flex-col w-full gap-3 px-4 md:w-1/2 md:flex-row">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     City <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -519,7 +519,7 @@ export const InspectionRequestForm = () => {
                   />
                 </div>
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     State <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -533,7 +533,7 @@ export const InspectionRequestForm = () => {
                   </select>
                 </div>
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Postal Code <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -549,7 +549,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     When will the inspection take place?
                     <span className="text-red-500">*</span>
                   </label>
@@ -570,7 +570,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Equipment Type <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -587,7 +587,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Equipment Manufacturer{" "}
                     <span className="text-red-500">*</span>
                   </label>
@@ -598,7 +598,7 @@ export const InspectionRequestForm = () => {
                     onChange={(e: Event) =>
                       setEquipmentManufacturer(
                         // @ts-ignore
-                        e.target.value as EquipmentType
+                        e.target.value as EquipmentType,
                       )
                     }
                     className="text-body-color focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 pl-6 pr-[34px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4 w-max-content"
@@ -609,7 +609,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Equipment Serial Number{" "}
                     <span className="text-red-500">*</span>
                   </label>
@@ -625,7 +625,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Equipment Model
                   </label>
                   <input
@@ -639,14 +639,10 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4">
                 <div className="mb-7 lg:mb-9">
-                  <label className="mb-3 block text-base font-medium text-black md:mb-5">
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Notes or Special Instructions
                   </label>
-                  <TextEditor
-                    // @ts-ignore
-                    editor={notes}
-                    initialValue={notesPlaceholder}
-                  />
+                  {/* <TextEditor editor={notes} initialValue={notesPlaceholder} /> */}
                 </div>
               </div>
               <div className="w-full px-4">
@@ -696,7 +692,7 @@ export const InspectionRequestForm = () => {
                     type="submit"
                     className={classNames(
                       "bg-primary block w-full rounded py-5 px-10 text-center text-base font-semibold text-white transition hover:bg-opacity-90",
-                      isMutationLoading && "animate-ellipsis"
+                      isMutationLoading && "animate-ellipsis",
                     )}
                   >
                     {isMutationLoading ? "Submitting" : "Submit Request"}

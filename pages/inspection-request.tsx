@@ -17,7 +17,7 @@ const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
 
   const { data: inspectionRequestsForUser } = useInspectionRequestsForUser(
-    user?.claims.user_id
+    user?.claims.user_id,
   );
   const [inspectionRequest, setInspectionRequest] = React.useState<
     InspectionRequestObjectWithId | undefined
@@ -56,7 +56,7 @@ const InspectionRequest: NextPage = () => {
   useEffect(() => {
     if (inspectionRequest?.inspectorRef) {
       getDoc(inspectionRequest.inspectorRef).then((doc) =>
-        setInspector(doc.data() as User)
+        setInspector(doc.data() as User),
       );
     }
   }, [inspectionRequest]);
@@ -64,20 +64,20 @@ const InspectionRequest: NextPage = () => {
   return (
     <div className="container">
       <section className="overflow-hidden py-10 lg:py-[80px]">
-        <div className="mx-auto px-4 sm:container">
+        <div className="px-4 mx-auto sm:container">
           <StepWidget step={step} />
         </div>
       </section>
       {step === Step.Request && <InspectionRequestForm />}
       {step === Step.Schedule && (
-        <section className="flex items-center justify-center bg-gray py-2">
+        <section className="flex items-center justify-center py-2 bg-gray">
           <div className="container mx-auto">
             <div className="mx-auto max-w-[600px] rounded-[10px] bg-white p-10 text-center shadow-card md:py-[55px] md:px-[70px]">
-              <div className="mx-auto mb-14 text-center">
+              <div className="mx-auto text-center mb-14">
                 <img
                   src="/schedule.svg"
                   alt="Schedule image"
-                  className="mx-auto w-full max-w-full"
+                  className="w-full max-w-full mx-auto"
                 />
               </div>
               <h2 className="mb-3 text-2xl font-semibold text-black sm:text-3xl">
@@ -109,14 +109,14 @@ const InspectionRequest: NextPage = () => {
         </section>
       )}
       {step === Step.Inspection && (
-        <section className="flex items-center justify-center bg-gray py-2">
+        <section className="flex items-center justify-center py-2 bg-gray">
           <div className="container mx-auto">
             <div className="mx-auto max-w-[600px] rounded-[10px] bg-white p-10 text-center shadow-card md:py-[55px] md:px-[70px]">
-              <div className="mx-auto mb-14 text-center">
+              <div className="mx-auto text-center mb-14">
                 <img
                   src="/inspector.svg"
                   alt="Inspector image"
-                  className="mx-auto w-full max-w-full"
+                  className="w-full max-w-full mx-auto"
                 />
               </div>
               <h2 className="mb-3 text-2xl font-semibold text-black sm:text-3xl">
