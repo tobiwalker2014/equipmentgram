@@ -25,6 +25,38 @@ export type User = {
   type: UserType;
   email?: string;
   display_name?: string;
+  firstName?: string;
+  lastName?: string;
+  address?: {
+    city?: string;
+    state?: string;
+    zip?: string;
+    line1?: string;
+    line2?: string;
+  };
+  nameOfBusiness?: string;
+  jobTitle?: string;
+  emailVerified?: boolean;
+  phoneNumber?: string;
+  photoURL?: string;
+};
+
+export type UpdateUser = {
+  user_id: string;
+  type?: UserType;
+  email?: string;
+  display_name?: string;
+  firstName?: string;
+  lastName?: string;
+  address?: {
+    city?: string;
+    state?: string;
+    zip?: string;
+    line1?: string;
+    line2?: string;
+  };
+  nameOfBusiness?: string;
+  jobTitle?: string;
   emailVerified?: boolean;
   phoneNumber?: string;
   photoURL?: string;
@@ -38,7 +70,7 @@ export const useUsers = () => {
   return useQuery<UserWithId[], Error>([UsersCollection], async () => {
     const snapshot = await getDocs(collection(db, UsersCollection));
     return snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as UserWithId)
+      (doc) => ({ id: doc.id, ...doc.data() }) as UserWithId,
     );
   });
 };
@@ -53,7 +85,7 @@ export const useGetUser = (user_id: string | undefined) => {
     },
     {
       enabled: !!user_id,
-    }
+    },
   );
 };
 
@@ -69,7 +101,23 @@ export const useSetUser = () => {
         queryClient.invalidateQueries([UsersCollection]);
         queryClient.refetchQueries([UsersCollection]);
       },
-    }
+    },
+  );
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (user: UpdateUser) => {
+      const docRef = doc(db, UsersCollection, user.user_id);
+      return updateDoc(docRef, user);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([UsersCollection]);
+        queryClient.refetchQueries([UsersCollection]);
+      },
+    },
   );
 };
 
@@ -86,7 +134,7 @@ export const useSetUserType = () => {
         queryClient.invalidateQueries([UsersCollection]);
         queryClient.refetchQueries([UsersCollection]);
       },
-    }
+    },
   );
 };
 
@@ -94,11 +142,11 @@ export const useGetInspectors = () => {
   return useQuery<User[], Error>([UsersCollection, "inspectors"], async () => {
     const q = await query(
       collection(db, UsersCollection),
-      where("type", "==", UserType.inspector)
+      where("type", "==", UserType.inspector),
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as UserWithId)
+      (doc) => ({ id: doc.id, ...doc.data() }) as UserWithId,
     );
   });
 };

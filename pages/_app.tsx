@@ -11,13 +11,13 @@ const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <FirebaseProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <FirebaseProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </QueryClientProvider>
-    </FirebaseProvider>
+      </FirebaseProvider>
+    </QueryClientProvider>
   );
 }
 export default MyApp;
