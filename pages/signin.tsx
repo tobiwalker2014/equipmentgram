@@ -88,9 +88,11 @@ const Home: NextPage = () => {
           type: UserType.customer,
         });
 
-        sendEmailVerification(auth.currentUser!).then(() => {
-          console.log("email sent");
-        });
+        if (!user.emailVerified) {
+          sendEmailVerification(auth.currentUser!).then(() => {
+            console.log("email sent");
+          });
+        }
 
         doRedirect();
       })

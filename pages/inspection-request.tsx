@@ -1,15 +1,13 @@
 import { getDoc } from "@firebase/firestore";
 import type { NextPage } from "next";
 import React, { useEffect } from "react";
-import {
-  InspectionRequestForm,
-  InspectionRequestObject,
-} from "../components/forms/InspectionRequestForm";
+import { InspectionRequestForm } from "../components/forms/InspectionRequestForm";
 import { Step, StepWidget } from "../components/forms/StepWidget";
 import { useAuth } from "../lib/authContext";
 import {
   InspectionRequestObjectWithId,
   useInspectionRequestsForUser,
+  useUpdateInspectionRequest,
 } from "../lib/network/inspection-requests";
 import { User } from "../lib/network/users";
 
@@ -61,6 +59,8 @@ const InspectionRequest: NextPage = () => {
     }
   }, [inspectionRequest]);
 
+  const { mutateAsync } = useUpdateInspectionRequest();
+
   return (
     <div className="container">
       <section className="overflow-hidden py-10 lg:py-[80px]">
@@ -89,8 +89,13 @@ const InspectionRequest: NextPage = () => {
                 details of your inspection once it has been scheduled.
               </p>
               <a
-                href="javascript:void(0)"
-                className="inline-flex items-center text-base font-medium text-primary hover:text-black"
+                onClick={() => {
+                  mutateAsync({
+                    id: inspectionRequest?.id!,
+                    canceled: true,
+                  });
+                }}
+                className="inline-flex items-center text-base font-medium cursor-pointer text-primary hover:text-black"
               >
                 <span className="pl-2 transform rotate-180">
                   <svg
@@ -130,8 +135,13 @@ const InspectionRequest: NextPage = () => {
                 be available to meet them at the front door.
               </p>
               <a
-                href="javascript:void(0)"
-                className="inline-flex items-center text-base font-medium text-primary hover:text-black"
+                onClick={() => {
+                  mutateAsync({
+                    id: inspectionRequest?.id!,
+                    canceled: true,
+                  });
+                }}
+                className="inline-flex items-center text-base font-medium cursor-pointer text-primary hover:text-black"
               >
                 <span className="pl-2 transform rotate-180">
                   <svg

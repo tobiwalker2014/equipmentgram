@@ -1,32 +1,25 @@
-import { EnvelopeIcon } from "@heroicons/react/20/solid";
-import * as yup from "yup";
-import { Dayjs, isDayjs } from "dayjs";
-import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  addQueryParameters,
-  toTitleCase,
-  usePersistentState,
-} from "../../lib/utils";
-import { TextEditor } from "./TextEditor";
-import { createEditor, Descendant } from "slate";
-import { withReact } from "slate-react";
-import AddressInput from "./AddressAutoComplete";
-import { EquipmentManufacturer, EquipmentType, USStates } from "./formUtils";
-import { useAuth } from "../../lib/authContext";
-import { useRouter } from "next/router";
-import { useAddInspectionRequest } from "../../lib/network/inspection-requests";
-import classNames from "classnames";
-import { Step } from "./StepWidget";
 import {
   DocumentData,
   DocumentReference,
   FieldValue,
   serverTimestamp,
 } from "@firebase/firestore";
+import { EnvelopeIcon } from "@heroicons/react/20/solid";
+import TextField from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import classNames from "classnames";
+import { Dayjs, isDayjs } from "dayjs";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef } from "react";
+import * as yup from "yup";
+import { useAuth } from "../../lib/authContext";
+import { useAddInspectionRequest } from "../../lib/network/inspection-requests";
+import { addQueryParameters, usePersistentState } from "../../lib/utils";
+import AddressInput from "./AddressAutoComplete";
+import { Step } from "./StepWidget";
+import { EquipmentManufacturer, EquipmentType, USStates } from "./formUtils";
 
 export type InspectionRequestObject = {
   user_id: string;
@@ -49,6 +42,7 @@ export type InspectionRequestObject = {
   notes?: string;
   step: Step;
   created: FieldValue;
+  canceled: boolean;
 };
 
 const schema = yup.object().shape({
@@ -77,9 +71,9 @@ export const InspectionRequestForm = () => {
     "InspectionRequestForm/date",
     null,
   );
-  const [notes, _, wipeNotes] = usePersistentState(
+  const [notes, setNotes, wipeNotes] = usePersistentState(
     "InspectionRequestForm/notes",
-    useMemo(() => withReact(createEditor()), []),
+    "",
   );
   const [streetAddress, setStreetAddress, wipeStreetAddress] =
     usePersistentState("InspectionRequestForm/streetAddress", "");
@@ -149,31 +143,6 @@ export const InspectionRequestForm = () => {
   const router = useRouter();
   const { fromSignin } = router.query;
 
-  const notesPlaceholder: Descendant[] = [
-    {
-      // @ts-ignore
-      type: "paragraph",
-      children: [{ text: "This is a Rich Text Editor." }],
-    },
-    {
-      // @ts-ignore
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-    {
-      // @ts-ignore
-      type: "paragraph",
-      children: [
-        { text: "You can add paragraphs, bullet lists, images, etc." },
-      ],
-    },
-    {
-      // @ts-ignore
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-
   // This function handles form submission by sending the form data to Firebase
   const onSubmit = async (e: Event) => {
     e.preventDefault();
@@ -206,9 +175,10 @@ export const InspectionRequestForm = () => {
       equipmentManufacturer,
       equipmentModel,
       equipmentSerialNumber,
-      notes: notes ? JSON.stringify(notes) : undefined,
+      notes: notes,
       step: Step.Schedule,
       created: serverTimestamp(),
+      canceled: false,
     };
 
     try {
@@ -642,6 +612,11 @@ export const InspectionRequestForm = () => {
                   <label className="block mb-3 text-base font-medium text-black md:mb-5">
                     Notes or Special Instructions
                   </label>
+                  <textarea
+                    className="text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4 md:px-[18px]"
+                    id="notes"
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
                   {/* <TextEditor editor={notes} initialValue={notesPlaceholder} /> */}
                 </div>
               </div>

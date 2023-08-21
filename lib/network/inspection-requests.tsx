@@ -16,7 +16,7 @@ import { UsersCollection } from "./users";
 
 export const InspectionRequestsCollection = "inspection-requests";
 
-export type InspectionRequestObjectWithId = InspectionRequestObject & {
+export type InspectionRequestObjectWithId = Partial<InspectionRequestObject> & {
   id: string;
 };
 
@@ -25,13 +25,13 @@ export const useInspectionRequests = () => {
     [InspectionRequestsCollection],
     async () => {
       const snapshot = await getDocs(
-        collection(db, InspectionRequestsCollection)
+        collection(db, InspectionRequestsCollection),
       );
       return snapshot.docs.map(
         (doc) =>
-          ({ id: doc.id, ...doc.data() } as InspectionRequestObjectWithId)
+          ({ id: doc.id, ...doc.data() }) as InspectionRequestObjectWithId,
       );
-    }
+    },
   );
 };
 
@@ -42,17 +42,18 @@ export const useInspectionRequestsForUser = (user_id: string | undefined) => {
     async () => {
       const q = await query(
         collection(db, InspectionRequestsCollection),
-        where("user_id", "==", user_id)
+        where("user_id", "==", user_id),
+        where("canceled", "==", false),
       );
       const snapshot = await getDocs(q);
       return snapshot.docs.map(
         (doc) =>
-          ({ id: doc.id, ...doc.data() } as InspectionRequestObjectWithId)
+          ({ id: doc.id, ...doc.data() }) as InspectionRequestObjectWithId,
       );
     },
     {
       enabled: !!user_id,
-    }
+    },
   );
 };
 
@@ -67,7 +68,7 @@ export const useAddInspectionRequest = () => {
         queryClient.invalidateQueries([InspectionRequestsCollection]);
         queryClient.refetchQueries([InspectionRequestsCollection]);
       },
-    }
+    },
   );
 };
 
@@ -89,7 +90,7 @@ export const useAddInspectorToInspectionRequest = () => {
         {
           inspectorRef: userDoc,
           step: Step.Inspection,
-        }
+        },
       );
     },
     {
@@ -97,7 +98,7 @@ export const useAddInspectorToInspectionRequest = () => {
         queryClient.invalidateQueries([InspectionRequestsCollection]);
         queryClient.refetchQueries([InspectionRequestsCollection]);
       },
-    }
+    },
   );
 };
 
@@ -112,7 +113,7 @@ export const useRemoveInspectorFromInspectionRequest = () => {
         {
           inspectorRef: null,
           step: Step.Schedule,
-        }
+        },
       );
     },
     {
@@ -120,6 +121,23 @@ export const useRemoveInspectorFromInspectionRequest = () => {
         queryClient.invalidateQueries([InspectionRequestsCollection]);
         queryClient.refetchQueries([InspectionRequestsCollection]);
       },
-    }
+    },
+  );
+};
+
+export const useUpdateInspectionRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (inspectionRequest: InspectionRequestObjectWithId) =>
+      updateDoc(
+        doc(db, InspectionRequestsCollection, inspectionRequest.id),
+        inspectionRequest,
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([InspectionRequestsCollection]);
+        queryClient.refetchQueries([InspectionRequestsCollection]);
+      },
+    },
   );
 };
