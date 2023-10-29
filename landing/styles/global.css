@@ -1,0 +1,25 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@keyframes ellipsis {
+  0% {
+    content: ".";
+  }
+  33% {
+    content: "..";
+  }
+  66% {
+    content: "...";
+  }
+}
+
+.animate-ellipsis:after {
+  content: ".";
+  animation: ellipsis 0.6s infinite;
+}
+
+.site-logo {
+  height: 50px;
+  object-fit: cover;
+}
