@@ -14,9 +14,9 @@ const Header = ({}) => {
                 Streamline Heavy Equipment Inspections and Accounting
               </h1>
               <p className="mb-8  text-base">
-                EquipmentGram offers a better buying and selling experience for buyers and sellers of construction
-                equipment with the use of an equipment history report system and a universal equipment telematics
-                system.
+                EquipmentGram improves the buying and selling experience for buyers and sellers of construction
+                equipment with the use of equipment inspection reports that can be easily managed and distributed by
+                buyers and sellers for different purposes
               </p>
               <div className="grid md:grid-cols-2 grid-cols-1 justify-items-stretch">
                 <div>
