@@ -27,7 +27,7 @@ const Header = ({}) => {
                   </Link>
                 </div>
                 <div>
-                  <Link href="/">
+                  <Link href="/faq">
                     <Button
                       fullWidth
                       size="lg"
