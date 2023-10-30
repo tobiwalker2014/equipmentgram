@@ -31,7 +31,7 @@ const Navbar = (props: Props) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white shadow-xl sm:px-4">
+      <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white border border-b sm:px-4">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
           <a href="/">
             <div className="text-xl font-extrabold text-blue-700">EquipmentGram</div>
