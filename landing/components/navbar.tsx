@@ -1,5 +1,6 @@
 "use client";
 
+import { navLinks } from "@/utils/nav-links";
 import { ActionIcon, Button, ButtonGroup, CloseButton, Divider, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBurger, IconMenu } from "@tabler/icons-react";
@@ -7,26 +8,7 @@ import React from "react";
 
 type Props = {};
 
-const navLinks = [
-  {
-    title: "About us",
-    link: "#",
-  },
-  {
-    title: "Pricing ",
-    link: "#",
-  },
-  {
-    title: "Blog ",
-    link: "#",
-  },
-  {
-    title: "Contact Us",
-    link: "#",
-  },
-];
-
-const Navbar = (props: Props) => {
+const Navbar = ({}: Props) => {
   const [opened, { open, close }] = useDisclosure();
 
   return (

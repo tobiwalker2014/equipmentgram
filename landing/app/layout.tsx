@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import colors from "tailwindcss/colors";
 import "./globals.css";
+import Footer from "@/components/sections/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           <Navbar />
           <div>{children}</div>
+          <Footer />
         </MantineProvider>
       </body>
     </html>
