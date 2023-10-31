@@ -13,6 +13,7 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@mantine/core": "^7.1.7",
+    "@mantine/dates": "^7.1.7",
     "@mantine/form": "^7.1.7",
     "@mantine/hooks": "^7.1.7",
     "@tabler/icons-react": "^2.40.0",
@@ -27,12 +28,14 @@
     "nookies": "^2.5.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-places-autocomplete": "^7.3.0",
     "yup": "^1.3.2"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-places-autocomplete": "^7.2.12",
     "autoprefixer": "^10",
     "postcss": "^8",
     "tailwindcss": "^3",

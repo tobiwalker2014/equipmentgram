@@ -1,29 +1,21 @@
-import {
-  DocumentData,
-  DocumentReference,
-  FieldValue,
-  serverTimestamp,
-} from "@firebase/firestore";
+import { DocumentData, DocumentReference, FieldValue, serverTimestamp } from "@firebase/firestore";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
-import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import classNames from "classnames";
-import { Dayjs, isDayjs } from "dayjs";
-import { useRouter } from "next/router";
-import React, { useEffect, useRef } from "react";
+import { Button, Checkbox } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { isDayjs } from "dayjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import * as yup from "yup";
 import { useAuth } from "../../lib/authContext";
 import { useAddInspectionRequest } from "../../lib/network/inspection-requests";
-import { addQueryParameters, usePersistentState } from "../../lib/utils";
+import { usePersistentState } from "../../lib/utils";
 import AddressInput from "./AddressAutoComplete";
 import { Step } from "./StepWidget";
 import { EquipmentManufacturer, EquipmentType, USStates } from "./formUtils";
 
 export type InspectionRequestObject = {
   user_id: string;
-  inspectorRef: DocumentReference<DocumentData>;
+  inspectorRef?: DocumentReference<DocumentData>;
   firstName: string;
   lastName: string;
   businessName?: string;
@@ -67,96 +59,66 @@ const schema = yup.object().shape({
 
 export const InspectionRequestForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [date, setDate, wipeDate] = usePersistentState<Dayjs | null>(
-    "InspectionRequestForm/date",
-    null,
+  const [date, setDate, wipeDate] = usePersistentState<Date | null>("InspectionRequestForm/date", null);
+  const [notes, setNotes, wipeNotes] = usePersistentState("InspectionRequestForm/notes", "");
+  const [streetAddress, setStreetAddress, wipeStreetAddress] = usePersistentState(
+    "InspectionRequestForm/streetAddress",
+    ""
   );
-  const [notes, setNotes, wipeNotes] = usePersistentState(
-    "InspectionRequestForm/notes",
-    "",
-  );
-  const [streetAddress, setStreetAddress, wipeStreetAddress] =
-    usePersistentState("InspectionRequestForm/streetAddress", "");
-  const [city, setCity, wipeCity] = usePersistentState(
-    "InspectionRequestForm/city",
-    "",
-  );
-  const [state, setState, wipeState] = usePersistentState(
-    "InspectionRequestForm/state",
-    "",
-  );
-  const [postalCode, setPostalCode, wipePostalCode] = usePersistentState(
-    "InspectionRequestForm/postalCode",
-    "",
-  );
-  const [firstName, setFirstName, wipeFirstName] = usePersistentState(
-    "InspectionRequestForm/firstName",
-    "",
-  );
-  const [lastName, setLastName, wipeLastName] = usePersistentState(
-    "InspectionRequestForm/lastName",
-    "",
-  );
+  const [city, setCity, wipeCity] = usePersistentState("InspectionRequestForm/city", "");
+  const [state, setState, wipeState] = usePersistentState("InspectionRequestForm/state", "");
+  const [postalCode, setPostalCode, wipePostalCode] = usePersistentState("InspectionRequestForm/postalCode", "");
+  const [firstName, setFirstName, wipeFirstName] = usePersistentState("InspectionRequestForm/firstName", "");
+  const [lastName, setLastName, wipeLastName] = usePersistentState("InspectionRequestForm/lastName", "");
   const [businessName, setBusinessName, wipeBusinessName] = usePersistentState(
     "InspectionRequestForm/businessName",
-    "",
+    ""
   );
-  const [email, setEmail, wipeEmail] = usePersistentState(
-    "InspectionRequestForm/email",
-    "",
+  const [email, setEmail, wipeEmail] = usePersistentState("InspectionRequestForm/email", "");
+  const [mobile, setMobile, wipeMobile] = usePersistentState("InspectionRequestForm/mobile", "");
+  const [equipmentSerialNumber, setEquipmentSerialNumber, wipeEquipmentSerialNumber] = usePersistentState(
+    "InspectionRequestForm/equipmentSerialNumber",
+    ""
   );
-  const [mobile, setMobile, wipeMobile] = usePersistentState(
-    "InspectionRequestForm/mobile",
-    "",
+  const [equipmentModel, setEquipmentModel, wipeEquipmentModel] = usePersistentState(
+    "InspectionRequestForm/equipmentModel",
+    ""
   );
-  const [
-    equipmentSerialNumber,
-    setEquipmentSerialNumber,
-    wipeEquipmentSerialNumber,
-  ] = usePersistentState("InspectionRequestForm/equipmentSerialNumber", "");
-  const [equipmentModel, setEquipmentModel, wipeEquipmentModel] =
-    usePersistentState("InspectionRequestForm/equipmentModel", "");
-  const [equipmentType, setEquipmentType, wipeEquipmentType] =
-    usePersistentState(
-      "InspectionRequestForm/equipmentType",
-      EquipmentType.Backhoe,
-    );
-  const [
-    equipmentManufacturer,
-    setEquipmentManufacturer,
-    wipeEquipmentManufacturer,
-  ] = usePersistentState(
+  const [equipmentType, setEquipmentType, wipeEquipmentType] = usePersistentState(
+    "InspectionRequestForm/equipmentType",
+    EquipmentType.Backhoe
+  );
+  const [equipmentManufacturer, setEquipmentManufacturer, wipeEquipmentManufacturer] = usePersistentState(
     "InspectionRequestForm/equipmentManufacturer",
-    EquipmentManufacturer.CATERPILLAR_CE,
+    EquipmentManufacturer.CATERPILLAR_CE
   );
 
-  const [readFAQReceipt, setReadFAQReceipt, wipeReadFAQReceipt] =
-    usePersistentState("InspectionRequestForm/readFAQReceipt", false);
+  const [readFAQReceipt, setReadFAQReceipt, wipeReadFAQReceipt] = usePersistentState(
+    "InspectionRequestForm/readFAQReceipt",
+    false
+  );
 
-  const {
-    mutateAsync,
-    isLoading: isMutationLoading,
-    isError: isMutationError,
-  } = useAddInspectionRequest();
+  const { mutateAsync, isLoading: isMutationLoading, isError: isMutationError } = useAddInspectionRequest();
 
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { fromSignin } = router.query;
+  // const { fromSignin } = router.query;
 
   // This function handles form submission by sending the form data to Firebase
   const onSubmit = async (e: Event) => {
     e.preventDefault();
-    if (!user?.claims.user_id) {
-      console.error("User not logged in");
-      let path = addQueryParameters("/signin", {
-        redirect: router.asPath,
-        reffererMsg: `${encodeURIComponent(
-          `You must be logged in to submit an inspection request. Please sign in to continue.`,
-        )}`,
-      });
-      router.push(path);
-      return;
-    }
+    if (!user) return;
+    // if (!user?.claims.user_id) {
+    //   console.error("User not logged in");
+    //   let path = addQueryParameters("/signin", {
+    //     redirect: router.asPath,
+    //     reffererMsg: `${encodeURIComponent(
+    //       `You must be logged in to submit an inspection request. Please sign in to continue.`
+    //     )}`,
+    //   });
+    //   router.push(path);
+    //   return;
+    // }
 
     const inspectionRequest: InspectionRequestObject = {
       user_id: user.claims.user_id,
@@ -218,13 +180,11 @@ export const InspectionRequestForm = () => {
 
   const genEquipmentManufacturers = () => {
     const equipmentManufacturers = Object.entries(EquipmentManufacturer);
-    return equipmentManufacturers.map(
-      ([equipmentManufacturerkey, equipmentManufacturer]) => (
-        <option key={equipmentManufacturer} value={equipmentManufacturer}>
-          {equipmentManufacturer}
-        </option>
-      ),
-    );
+    return equipmentManufacturers.map(([equipmentManufacturerkey, equipmentManufacturer]) => (
+      <option key={equipmentManufacturer} value={equipmentManufacturer}>
+        {equipmentManufacturer}
+      </option>
+    ));
   };
 
   const genUSAStates = () => {
@@ -238,25 +198,25 @@ export const InspectionRequestForm = () => {
 
   useEffect(() => {
     // Give local storage time to load
-    setTimeout(() => {
-      if (fromSignin && formRef?.current) {
-        if (formRef.current.checkValidity()) {
-          console.log("Form is valid");
-          onSubmit(new Event("submit"));
-        } else {
-          console.log("Form is invalid");
-          formRef.current.reportValidity();
-          // To get the specific validation error messages:
-          const errors = formRef.current.querySelectorAll(":invalid");
-          errors.forEach((error) => {
-            // @ts-ignore
-            console.log("Invalid Form: ", error.validationMessage);
-          });
-        }
-      }
-    }, 500);
+    // setTimeout(() => {
+    //   if (fromSignin && formRef?.current) {
+    //     if (formRef.current.checkValidity()) {
+    //       console.log("Form is valid");
+    //       onSubmit(new Event("submit"));
+    //     } else {
+    //       console.log("Form is invalid");
+    //       formRef.current.reportValidity();
+    //       // To get the specific validation error messages:
+    //       const errors = formRef.current.querySelectorAll(":invalid");
+    //       errors.forEach((error) => {
+    //         // @ts-ignore
+    //         console.log("Invalid Form: ", error.validationMessage);
+    //       });
+    //     }
+    //   }
+    // }, 500);
   }, [
-    fromSignin,
+    // fromSignin,
     formRef.current,
     firstName,
     lastName,
@@ -282,15 +242,9 @@ export const InspectionRequestForm = () => {
         <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4">
             <div className="mx-auto mb-[60px] max-w-[510px] text-center lg:mb-20">
-              <span className="block mb-2 text-lg font-semibold text-primary">
-                Read Our FAQ
-              </span>
-              <h2 className="text-dark mb-4 text-3xl font-bold sm:text-4xl md:text-[40px]">
-                Inspection Request Form
-              </h2>
-              <p className="text-base text-body-color">
-                Fill the form below to request a heavy equipment inspection.
-              </p>
+              <span className="block mb-2 text-lg font-semibold text-primary">Read Our FAQ</span>
+              <h2 className="text-dark mb-4 text-3xl font-bold sm:text-4xl md:text-[40px]">Inspection Request Form</h2>
+              <p className="text-base text-body-color">Fill the form below to request a heavy equipment inspection.</p>
             </div>
           </div>
         </div>
@@ -314,13 +268,7 @@ export const InspectionRequestForm = () => {
                       className="pl-12 text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4"
                     />
                     <span className="absolute -translate-y-1/2 top-1/2 left-4">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.8">
                           <path
                             fillRule="evenodd"
@@ -356,13 +304,7 @@ export const InspectionRequestForm = () => {
                       className="pl-12 text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4"
                     />
                     <span className="absolute -translate-y-1/2 top-1/2 left-4">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.8">
                           <path
                             fillRule="evenodd"
@@ -384,9 +326,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4">
                 <div className="mb-7 lg:mb-9">
-                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
-                    Business Name
-                  </label>
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">Business Name</label>
                   <input
                     type="text"
                     value={businessName}
@@ -404,10 +344,7 @@ export const InspectionRequestForm = () => {
                   </label>
                   <div className="relative mt-1 rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <EnvelopeIcon
-                        className="w-5 h-5 text-body-color"
-                        aria-hidden="true"
-                      />
+                      <EnvelopeIcon className="w-5 h-5 text-body-color" aria-hidden="true" />
                     </div>
                     <input
                       type="email"
@@ -523,7 +460,19 @@ export const InspectionRequestForm = () => {
                     When will the inspection take place?
                     <span className="text-red-500">*</span>
                   </label>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+                  <DatePickerInput
+                    // className="[&>label]:mt-1 [&>label]:text-body-color/50 text-body-color w-full rounded border border-[#EBEBEB] bg-white text-base leading-relaxed outline-none [&>div>input]:py-4 md:[&>div>input]:py-[18px] outline-none"
+                    size="lg"
+                    placeholder="Pick date"
+                    value={date}
+                    onChange={(v) => {
+                      console.log(v);
+                      setDate(v);
+                    }}
+                  />
+
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disablePast
                       InputProps={{ required: true }}
@@ -535,7 +484,7 @@ export const InspectionRequestForm = () => {
                       renderInput={(params) => <TextField {...params} />}
                       className="[&>label]:mt-1 [&>label]:text-body-color/50 text-body-color w-full rounded border border-[#EBEBEB] bg-white text-base leading-relaxed outline-none [&>div>input]:py-4 md:[&>div>input]:py-[18px] outline-none"
                     />
-                  </LocalizationProvider>
+                  </LocalizationProvider> */}
                 </div>
               </div>
               <div className="w-full px-4 md:w-1/2">
@@ -546,9 +495,7 @@ export const InspectionRequestForm = () => {
                   <select
                     id="equipmentType"
                     value={equipmentType}
-                    onChange={(e) =>
-                      setEquipmentType(e.target.value as EquipmentType)
-                    }
+                    onChange={(e) => setEquipmentType(e.target.value as EquipmentType)}
                     className="text-body-color focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 pl-6 pr-[34px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4 w-max-content"
                   >
                     {genEquipmentTypes()}
@@ -558,8 +505,7 @@ export const InspectionRequestForm = () => {
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
                   <label className="block mb-3 text-base font-medium text-black md:mb-5">
-                    Equipment Manufacturer{" "}
-                    <span className="text-red-500">*</span>
+                    Equipment Manufacturer <span className="text-red-500">*</span>
                   </label>
                   <select
                     id="equipmentManufacturer"
@@ -568,7 +514,7 @@ export const InspectionRequestForm = () => {
                     onChange={(e: Event) =>
                       setEquipmentManufacturer(
                         // @ts-ignore
-                        e.target.value as EquipmentType,
+                        e.target.value as EquipmentType
                       )
                     }
                     className="text-body-color focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 pl-6 pr-[34px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4 w-max-content"
@@ -580,8 +526,7 @@ export const InspectionRequestForm = () => {
               <div className="w-full px-4 md:w-1/2">
                 <div className="mb-7 lg:mb-9">
                   <label className="block mb-3 text-base font-medium text-black md:mb-5">
-                    Equipment Serial Number{" "}
-                    <span className="text-red-500">*</span>
+                    Equipment Serial Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -595,9 +540,7 @@ export const InspectionRequestForm = () => {
               </div>
               <div className="w-full px-4">
                 <div className="mb-7 lg:mb-9">
-                  <label className="block mb-3 text-base font-medium text-black md:mb-5">
-                    Equipment Model
-                  </label>
+                  <label className="block mb-3 text-base font-medium text-black md:mb-5">Equipment Model</label>
                   <input
                     type="text"
                     value={equipmentModel}
@@ -626,52 +569,26 @@ export const InspectionRequestForm = () => {
                   className="text-body-color mb-12 flex cursor-pointer items-center text-base md:mb-[70px]"
                 >
                   <div className="relative">
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      id="readFAQReceipt"
-                      checked={readFAQReceipt}
+                    <Checkbox
+                      mr={10}
+                      size="xl"
                       required
+                      value={readFAQReceipt as any}
                       onChange={(e) => {
                         console.log("hello", e.target.checked);
                         setReadFAQReceipt(e.target.checked);
                       }}
                     />
-                    <div className="p-4 box mr-4 flex h-5 w-5 items-center justify-center rounded border border-[#E2E2E2]">
-                      <span className="opacity-0">
-                        <svg
-                          viewBox="0 0 11 8"
-                          width={15}
-                          height={12}
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="m10.091.952-.004-.006-.006-.005A.45.45 0 0 0 9.43.939L4.162 6.23 1.585 3.636a.45.45 0 0 0-.652 0 .472.472 0 0 0 0 .657l.002.002L3.58 6.958a.8.8 0 0 0 .567.242.775.775 0 0 0 .567-.242l5.333-5.356a.474.474 0 0 0 .044-.65ZM4.234 6.301 4.232 6.3Z"
-                            fill="#3056D3"
-                            stroke="#3056D3"
-                            strokeWidth={0.4}
-                          />
-                        </svg>
-                      </span>
-                    </div>
                   </div>
-                  I agree that I have read and understood EquipmentGram&apos;s
-                  inspection terms and conditions by reading the FAQ and other
-                  information on the website.
+                  I agree that I have read and understood EquipmentGram&apos;s inspection terms and conditions by
+                  reading the FAQ and other information on the website.
                 </label>
               </div>
-              <div className="w-full px-4 sm:w-8/12 lg:w-4/12">
+              <div className="w-full px-4 sm:w-8/12 lg:w-4/12 mb-20">
                 <div className="text-center">
-                  <button
-                    type="submit"
-                    className={classNames(
-                      "bg-primary block w-full rounded py-5 px-10 text-center text-base font-semibold text-white transition hover:bg-opacity-90",
-                      isMutationLoading && "animate-ellipsis",
-                    )}
-                  >
+                  <Button type="submit" loading={isMutationLoading} size="lg">
                     {isMutationLoading ? "Submitting" : "Submit Request"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

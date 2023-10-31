@@ -1,5 +1,5 @@
-import classNames from "classnames";
 import { IconChevronDown } from "@tabler/icons-react";
+import classNames from "classnames";
 
 export enum Step {
   Request = "Request",
@@ -27,17 +27,17 @@ export function StepWidget(props: StepWizardProps) {
         return (
           <div className="relative px-3 text-center sm:px-7 md:px-10 lg:px-[50px]" key={`StepWidget-${step}`}>
             {!isLastStep && (
-              <span className="bg-primary absolute right-[-45px] top-[17px] block h-[2px] w-[80px] sm:right-[-60px] sm:top-[25px] sm:w-[120px]"></span>
+              <span className="bg-blue-700 absolute right-[-45px] top-[17px] block h-[2px] w-[80px] sm:right-[-60px] sm:top-[25px] sm:w-[120px]"></span>
             )}
             {isCurrentStep && !completedAllSteps && (
-              <span className="absolute bottom-[45px] md:bottom-[65px] left-0 right-0 transform md:scale-[1] scale-[0.6]">
-                <IconChevronDown className="text-primary animate-bounce" size="2x" />
+              <span className="absolute bottom-[45px] md:bottom-[65px] left-[63px] right-0 transform md:scale-[1] scale-[0.6]">
+                <IconChevronDown className="text-blue-700 animate-bounce" />
               </span>
             )}
             <span
               className={classNames(
-                "border-primary bg-gray-1 text-primary relative z-10 mx-auto mb-[10px] flex h-9 w-9 items-center justify-center rounded-full border-2 text-base font-medium sm:h-[50px] sm:w-[50px] sm:text-xl",
-                isCompletedStep || completedAllSteps ? "bg-primary text-white" : "bg-gray-1 text-primary"
+                "border-blue-700 bg-gray-100 text-blue-700 relative z-10 mx-auto mb-[10px] flex h-9 w-9 items-center justify-center rounded-full border-2 text-base font-medium sm:h-[50px] sm:w-[50px] sm:text-xl",
+                isCompletedStep || completedAllSteps ? "bg-blue-700 text-black" : "bg-gray-100 text-blue-700"
               )}
             >
               {index + 1}

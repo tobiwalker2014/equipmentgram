@@ -10,6 +10,7 @@ import "./globals.css";
 import Footer from "@/components/sections/footer";
 import FirebaseProvider from "@/lib/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "@mantine/dates/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
@@ -18,6 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <script
+          src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyDa5QyoPFwUz6X6U2znLg88tBWDenn3KTs&libraries=places`}
+        ></script>
         <ColorSchemeScript />
       </head>
       <body className={inter.className}>
