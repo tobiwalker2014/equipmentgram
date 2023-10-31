@@ -6,19 +6,22 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconBurger, IconMenu } from "@tabler/icons-react";
 import Link from "next/link";
 import React from "react";
+import NavUserMenu from "./nav-user-menu";
+import { useAuth } from "@/lib/authContext";
 
 type Props = {};
 
 const Navbar = ({}: Props) => {
   const [opened, { open, close }] = useDisclosure();
+  const { user } = useAuth();
 
   return (
     <>
       <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white border border-b sm:px-4">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
-          <a href="/">
+          <Link href="/">
             <div className="text-xl font-extrabold text-blue-700">EquipmentGram</div>
-          </a>
+          </Link>
           <ul className="flex-col hidden p-4 mt-4 font-medium border border-gray-100 rounded-lg md:flex md:p-0 bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white ">
             {navLinks.map((item, i) => (
               <li key={i}>
@@ -32,14 +35,18 @@ const Navbar = ({}: Props) => {
             ))}
           </ul>
           <div className="flex gap-2">
-            <div className="space-x-2 hidden md:block">
-              <Link href="/signin">
-                <Button variant="outline">Sign In</Button>
-              </Link>
-              <Link href="/signup">
-                <Button>Sign Up</Button>
-              </Link>
-            </div>
+            {!user ? (
+              <div className="space-x-2 hidden md:block">
+                <Link href="/signup">
+                  <Button>Sign Up</Button>
+                </Link>
+                <Link href="/signin">
+                  <Button variant="outline">Sign In</Button>
+                </Link>
+              </div>
+            ) : (
+              <NavUserMenu />
+            )}
             <div className="md:hidden inline-flex ">
               <ActionIcon onClick={open} variant="white" color="dark">
                 <IconMenu />
