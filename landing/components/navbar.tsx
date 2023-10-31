@@ -33,14 +33,14 @@ const Navbar = ({}: Props) => {
                 </Link>
               </li>
             ))}
-            <li>
+            {/* <li>
               <Link
                 href="/admin/inspection-requests"
                 className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 "
               >
                 Admin
               </Link>
-            </li>
+            </li> */}
           </ul>
           <div className="flex gap-2">
             {!user ? (

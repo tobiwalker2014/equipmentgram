@@ -1,9 +1,9 @@
 "use client";
 
 import { signOut, useAuth } from "@/lib/authContext";
-import { useGetUser } from "@/lib/network/users";
+import { UserType, useGetUser } from "@/lib/network/users";
 import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
-import { IconAddressBook, IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
+import { IconAddressBook, IconLogout, IconSettings, IconUser, IconUserBolt } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import React, { forwardRef } from "react";
 
@@ -38,8 +38,16 @@ const NavUserMenu = (props: Props) => {
           onClick={() => router.push("/account-settings")}
           leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
         >
-          Account Settings
+          Settings
         </Menu.Item>
+        {userData?.type === UserType.admin && (
+          <Menu.Item
+            onClick={() => router.push("/admin/inspection-requests")}
+            leftSection={<IconUserBolt style={{ width: rem(14), height: rem(14) }} />}
+          >
+            Admin
+          </Menu.Item>
+        )}
 
         <Menu.Divider />
         <Menu.Item
