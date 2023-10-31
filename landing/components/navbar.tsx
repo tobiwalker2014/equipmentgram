@@ -4,6 +4,7 @@ import { navLinks } from "@/utils/nav-links";
 import { ActionIcon, Button, ButtonGroup, CloseButton, Divider, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBurger, IconMenu } from "@tabler/icons-react";
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -32,8 +33,12 @@ const Navbar = ({}: Props) => {
           </ul>
           <div className="flex gap-2">
             <div className="space-x-2 hidden md:block">
-              <Button variant="outline">Sign In</Button>
-              <Button>Sign Up</Button>
+              <Link href="/signin">
+                <Button variant="outline">Sign In</Button>
+              </Link>
+              <Link href="/signup">
+                <Button>Sign Up</Button>
+              </Link>
             </div>
             <div className="md:hidden inline-flex ">
               <ActionIcon onClick={open} variant="white" color="dark">
@@ -63,8 +68,12 @@ const Navbar = ({}: Props) => {
           <Divider />
 
           <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline">Sign In</Button>
-            <Button>Sign Up</Button>
+            <Link href="/signin">
+              <Button variant="outline">Sign In</Button>
+            </Link>
+            <Link href="/signup">
+              <Button>Sign Up</Button>
+            </Link>
           </div>
         </ul>
       </Drawer>
