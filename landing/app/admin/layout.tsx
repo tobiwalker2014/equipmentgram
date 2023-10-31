@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           { label: "Admin Tools", value: "tools" },
         ]}
       />
-      {children}
+      <div className="my-10">{children}</div>
     </div>
   );
 }
