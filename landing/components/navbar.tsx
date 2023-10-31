@@ -1,19 +1,19 @@
 "use client";
 
-import { navLinks } from "@/utils/nav-links";
-import { ActionIcon, Button, ButtonGroup, CloseButton, Divider, Drawer } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconBurger, IconMenu } from "@tabler/icons-react";
-import Link from "next/link";
-import React from "react";
-import NavUserMenu from "./nav-user-menu";
 import { useAuth } from "@/lib/authContext";
+import { navLinks } from "@/utils/nav-links";
+import { ActionIcon, Button, CloseButton, Divider, Drawer } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconMenu } from "@tabler/icons-react";
+import Link from "next/link";
+import NavUserMenu from "./nav-user-menu";
 
 type Props = {};
 
 const Navbar = ({}: Props) => {
   const [opened, { open, close }] = useDisclosure();
   const { user } = useAuth();
+  console.log(user);
 
   return (
     <>
@@ -25,14 +25,22 @@ const Navbar = ({}: Props) => {
           <ul className="flex-col hidden p-4 mt-4 font-medium border border-gray-100 rounded-lg md:flex md:p-0 bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white ">
             {navLinks.map((item, i) => (
               <li key={i}>
-                <a
+                <Link
                   href={item.link}
                   className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 "
                 >
                   {item.title}
-                </a>
+                </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/admin/inspection-requests"
+                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 "
+              >
+                Admin
+              </Link>
+            </li>
           </ul>
           <div className="flex gap-2">
             {!user ? (

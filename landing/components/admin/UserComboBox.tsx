@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
@@ -39,9 +41,7 @@ export function UserComboBox(props: Props) {
         onSelect(value!);
       }}
     >
-      <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
-        {label}
-      </Combobox.Label>
+      <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Combobox.Label>
       <div className="relative mt-2">
         <Combobox.Input
           placeholder={placeholder}
@@ -50,10 +50,7 @@ export function UserComboBox(props: Props) {
           displayValue={(person: Person) => person?.displayName}
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-          <ChevronUpDownIcon
-            className="h-5 w-5 text-gray-400"
-            aria-hidden="true"
-          />
+          <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </Combobox.Button>
 
         {filteredPeople.length > 0 && (
@@ -74,17 +71,8 @@ export function UserComboBox(props: Props) {
                 {({ active, selected }) => (
                   <>
                     <div className="flex items-center">
-                      <img
-                        src={person.photoURL}
-                        alt=""
-                        className="h-6 w-6 flex-shrink-0 rounded-full"
-                      />
-                      <span
-                        className={classNames(
-                          "ml-3 truncate",
-                          selected && "font-semibold"
-                        )}
-                      >
+                      <img src={person.photoURL} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+                      <span className={classNames("ml-3 truncate", selected && "font-semibold")}>
                         {person.displayName}
                       </span>
                     </div>
