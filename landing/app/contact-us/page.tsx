@@ -67,6 +67,9 @@ const ContactUs = (props: Props) => {
                     <div className="mx-0 mb-1 sm:mb-4">
                       <TextInput placeholder="Your Email" type="email" />
                     </div>
+                    <div className="mx-0 mb-1 sm:mb-4">
+                      <TextInput placeholder="Your Phone" type="tel" />
+                    </div>
                   </div>
                   <div className="mx-0 mb-1 sm:mb-4">
                     <Textarea placeholder="Your Message" rows={5} cols={30} />
