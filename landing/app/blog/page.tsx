@@ -13,10 +13,13 @@ const BlogPage = (props: Props) => {
   console.log(data);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 max-w-screen-xl mx-auto container px-4 my-20">
-      {data?.map((article) => {
-        return <ArticleCard {...article} />;
-      })}
+    <div className="my-10">
+      {/* <div className="text-center font-bold text-4xl">Blog</div> */}
+      <div className="grid grid-cols-1 md:grid-cols-3 max-w-screen-xl mx-auto container px-4 my-20">
+        {data?.map((article) => {
+          return <ArticleCard {...article} />;
+        })}
+      </div>
     </div>
   );
 };

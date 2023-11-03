@@ -29,7 +29,7 @@ export const useBlogs = () => {
   });
 };
 
-export const useBlog = (id: string) => {
+export const useBlogById = (id: string) => {
   return useQuery<IBlog, Error>([BlogsCollection, id], async () => {
     const snapshot = await getDocs(collection(db, BlogsCollection));
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IBlog))[0];
