@@ -11,7 +11,7 @@ const Header = ({}) => {
           <div className="w-full px-4 lg:w-5/12">
             <div className="hero-content">
               <h1 className="text-dark mb-3 text-4xl font-bold leading-snug sm:text-[42px] lg:text-[40px] xl:text-[42px]">
-                Streamline Heavy Equipment Inspections and Accounting
+                Streamline Your Heavy Equipment Inspections and Accounting
               </h1>
               <p className="mb-8  text-base">
                 EquipmentGram improves the buying and selling experience for buyers and sellers of construction
