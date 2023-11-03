@@ -1,4 +1,5 @@
 import { Button } from "@mantine/core";
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -42,7 +43,7 @@ const Pricing = (props: Props) => {
   return (
     <div className="my-20 container px-4 mx-auto max-w-screen-xl">
       <div className="flex items-center justify-center flex-col gap-10">
-        <h1 className="text-4xl font-bold text-gray-900 ">Pricing plans for an inspection</h1>
+        <h1 className="text-4xl font-bold text-gray-900 ">Pricing Details for An Inspection Report</h1>
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg  sm:p-8">
           <h5 className="mb-4 text-xl font-medium text-gray-500 ">Standard plan</h5>
           <div className="flex items-baseline text-gray-900 ">
@@ -71,7 +72,9 @@ const Pricing = (props: Props) => {
             ))}
           </ul>
 
-          <Button fullWidth>Choose plan</Button>
+          <Link href="/inspection-request">
+            <Button fullWidth>Request An Inspection</Button>
+          </Link>
         </div>
       </div>
     </div>

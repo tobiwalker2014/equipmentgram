@@ -17,8 +17,8 @@ const ContactUs = (props: Props) => {
           </div>
         </div>
         <div className="flex items-stretch justify-center">
-          <div className="grid md:grid-cols-2">
-            <div className="h-full pr-6">
+          <div className="flex">
+            {/* <div className="h-full pr-6">
               <p className="mt-3 mb-12 text-lg text-gray-600 ">
                 ClassName aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis nec
                 ipsum orci. Ut scelerisque sagittis ante, ac tincidunt sem venenatis ut.
@@ -55,8 +55,8 @@ const ContactUs = (props: Props) => {
                   </div>
                 </li>
               </ul>
-            </div>
-            <div className="card h-fit max-w-6xl p-5 md:p-12" id="form">
+            </div> */}
+            <div className="card min-w-[600px] h-fit max-w-6xl p-5 md:p-12" id="form">
               <h2 className="mb-4 text-2xl font-bold">Ready to Get Started?</h2>
               <form id="contactForm">
                 <div className="mb-6">

@@ -1,5 +1,6 @@
 import { ThemeIcon, Text, Title, Container, SimpleGrid, rem } from "@mantine/core";
 import { IconGauge, IconCookie, IconUser, IconMessage2, IconLock } from "@tabler/icons-react";
+import Link from "next/link";
 
 export const MOCKDATA = [
   {
@@ -117,11 +118,13 @@ export function FeaturesGrid() {
       </SimpleGrid>
 
       <div className="mt-20">
-        <p className="text-xl">
+        <p className="text-xl mb-2">
           Join us on this journey to bring transparency, trust, and reliability to the construction equipment
           marketplace.
         </p>
-        <p className="font-bold"> Ready to get started? Contact us today!</p>
+        <Link href="/contact-us" className="font-bold text-blue-700">
+          Ready to get started? Contact us today!
+        </Link>
       </div>
     </div>
   );
