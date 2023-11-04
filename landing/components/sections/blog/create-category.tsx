@@ -12,7 +12,7 @@ const CreateCategory = (props: Props) => {
 
   return (
     <div>
-      <h1>Create Category</h1>
+      <h1 className="mb-4 font-bold">Create Category</h1>
 
       <form
         onSubmit={async (e) => {
@@ -20,6 +20,7 @@ const CreateCategory = (props: Props) => {
           await mutate.mutateAsync(name);
           setName("");
         }}
+        className="space-y-4"
       >
         <TextInput
           label="Category Name"

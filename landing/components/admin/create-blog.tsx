@@ -40,6 +40,8 @@ const CreateBlog = ({}: Props) => {
 
   return (
     <div className="max-w-screen-lg space-y-4">
+      <h1 className=" font-bold">Create Blog</h1>
+
       <TextInput onChange={(e) => setTitle(e.currentTarget.value)} label="Title" placeholder="Title" />
 
       <div className="grid grid-cols-2 gap-4">
@@ -69,7 +71,7 @@ const CreateBlog = ({}: Props) => {
       </div>
 
       <Button loading={mutation.isLoading} onClick={onCreateNewBlog}>
-        Submit
+        Create Blog
       </Button>
     </div>
   );
