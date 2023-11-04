@@ -1,10 +1,10 @@
 "use client";
 
 import { storage } from "@/lib/firebaseConfig/init";
-import { Text, Button } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 type Props = {
   onUploadComplete: (url: string) => void;
@@ -13,7 +13,6 @@ type Props = {
 
 const UploadFileField = ({ onUploadComplete, fileName }: Props) => {
   const [loading, setLoading] = useState(false);
-  const webcamRef = useRef<any>(null); // Reference to the webcam component
 
   const onDropFile = (file: FileWithPath[]) => {
     const storageRef = ref(storage, fileName + new Date().getTime() + file[0].name);
@@ -47,38 +46,11 @@ const UploadFileField = ({ onUploadComplete, fileName }: Props) => {
     );
   };
 
-  const captureImage = () => {
-    if (webcamRef.current) {
-      //@ts-ignore
-      const imageSrc = webcamRef.current.getScreenshot();
-      if (imageSrc) {
-        const blob = dataURLtoBlob(imageSrc);
-        const file = new File([blob], "captured-image.png");
-        onDropFile([file]);
-      }
-    }
-  };
-
-  // Function to convert Data URL to Blob
-  const dataURLtoBlob = (dataURL: string) => {
-    const parts = dataURL.split(";base64,");
-    const contentType = parts[0].split(":")[1];
-    const raw = window.atob(parts[1]);
-    const rawLength = raw.length;
-    const uInt8Array = new Uint8Array(rawLength);
-
-    for (let i = 0; i < rawLength; ++i) {
-      uInt8Array[i] = raw.charCodeAt(i);
-    }
-
-    return new Blob([uInt8Array], { type: contentType });
-  };
-
   return (
     <div>
-      <Button onClick={captureImage}>Upload Cover Image</Button>
-      <Dropzone w="200px" p={6} maxFiles={1} loading={loading} accept={IMAGE_MIME_TYPE} onDrop={onDropFile}>
-        <Text ta="center">Upload Image</Text>
+      <label className="text-md font-medium">Cover Photo</label>
+      <Dropzone w="100%" p={6} maxFiles={1} loading={loading} accept={IMAGE_MIME_TYPE} onDrop={onDropFile}>
+        <Text ta="center">Upload Cover Image</Text>
       </Dropzone>
     </div>
   );

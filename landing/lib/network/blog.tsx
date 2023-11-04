@@ -1,6 +1,6 @@
 "use client";
 
-import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from "@firebase/firestore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { db } from "../firebaseConfig/init";
 
@@ -13,7 +13,7 @@ export interface IBlog {
   category: ICategory;
 }
 
-interface IBlogWithId extends IBlog {
+export interface IBlogWithId extends IBlog {
   id: string;
 }
 
@@ -36,8 +36,8 @@ export const useBlogs = () => {
 
 export const useBlogById = (id: string) => {
   return useQuery<IBlogWithId, Error>([BlogsCollection, id], async () => {
-    const snapshot = await getDocs(collection(db, BlogsCollection));
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IBlogWithId))[0];
+    const snapshot = await getDoc(doc(db, BlogsCollection, id));
+    return { id: snapshot.id, ...snapshot.data() } as IBlogWithId;
   });
 };
 

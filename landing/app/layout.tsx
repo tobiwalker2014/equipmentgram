@@ -1,16 +1,17 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import "@mantine/core/styles.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import colors from "tailwindcss/colors";
-import "./globals.css";
 import Footer from "@/components/sections/footer";
 import FirebaseProvider from "@/lib/authContext";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Inter } from "next/font/google";
+import colors from "tailwindcss/colors";
+
+import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/dropzone/styles.css";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();

@@ -1,8 +1,8 @@
-import { IBlog } from "@/lib/network/blog";
+import { IBlog, IBlogWithId } from "@/lib/network/blog";
 import { Badge, Card, Image, Text } from "@mantine/core";
 import Link from "next/link";
 
-export function ArticleCard({ category, content, created_at, id, title, updated_at, imageUrl }: IBlog) {
+export function ArticleCard({ category, content, created_at, id, title, updated_at, imageUrl }: IBlogWithId) {
   return (
     <Link href={`/blog/${category.name}/${id}`}>
       <Card withBorder padding="lg" radius="md">
@@ -18,10 +18,10 @@ export function ArticleCard({ category, content, created_at, id, title, updated_
           />
         </Card.Section>
 
-        <Text>{title || "No title"}</Text>
+        <Text className="font-bold">{title || "No title"}</Text>
 
         <Link href={`/blog/${category.name}`}>
-          <Badge fw={700} mt="xs" w="fit-content" variant="light">
+          <Badge className="hover:bg-blue-600" radius={0} mt="xs" w="fit-content">
             {category.name}
           </Badge>
         </Link>

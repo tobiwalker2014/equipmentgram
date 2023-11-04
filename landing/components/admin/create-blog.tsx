@@ -1,7 +1,7 @@
 "use client";
 
 import { useCategories, useCreateBlog } from "@/lib/network/blog";
-import { Autocomplete, Button, Input, TextInput } from "@mantine/core";
+import { Autocomplete, Button, TextInput } from "@mantine/core";
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
 import UploadFileField from "../forms/upload-file-field";
@@ -11,6 +11,7 @@ type Props = {};
 const CreateBlog = ({}: Props) => {
   const editor = useRef(null);
   const [content, setContent] = useState<any>("");
+  const [imageUrl, setImageUrl] = useState<any>("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
 
@@ -27,6 +28,12 @@ const CreateBlog = ({}: Props) => {
       title: title,
       updated_at: new Date().toISOString(),
     });
+
+    //reset
+    setContent("");
+    setImageUrl("");
+    setTitle("");
+    setCategory("");
   };
 
   const { data: categories } = useCategories();
@@ -34,13 +41,17 @@ const CreateBlog = ({}: Props) => {
   return (
     <div className="max-w-screen-lg space-y-4">
       <TextInput onChange={(e) => setTitle(e.currentTarget.value)} label="Title" placeholder="Title" />
-      <UploadFileField fileName={title} onUploadComplete={(url) => console.log(url)} />
-      <Autocomplete
-        label="Category"
-        placeholder="Pick value or enter anything"
-        data={categories?.map((category) => category.name)}
-        onChange={(value) => setCategory(value)}
-      />
+
+      <div className="grid grid-cols-2 gap-4">
+        <UploadFileField fileName={title} onUploadComplete={(url) => setImageUrl(url)} />
+        <Autocomplete
+          label="Category"
+          placeholder="Pick value or enter anything"
+          data={categories?.map((category) => category.name)}
+          onChange={(value) => setCategory(value)}
+        />
+        {imageUrl && <img className="max-h-[200px]" src={imageUrl} />}
+      </div>
 
       <div>
         <label className="text-md font-medium">Content</label>
@@ -57,12 +68,9 @@ const CreateBlog = ({}: Props) => {
         />
       </div>
 
-      <Button onClick={onCreateNewBlog}>Submit</Button>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: content,
-        }}
-      ></div>
+      <Button loading={mutation.isLoading} onClick={onCreateNewBlog}>
+        Submit
+      </Button>
     </div>
   );
 };

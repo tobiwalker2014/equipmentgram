@@ -1,7 +1,7 @@
-import { IBlog } from "@/lib/network/blog";
+import { IBlog, IBlogWithId } from "@/lib/network/blog";
 import { Image } from "@mantine/core";
 
-export default function Post({ data }: { data: IBlog }) {
+export default function Post({ data }: { data: IBlogWithId }) {
   const { title, category, content, created_at, id, updated_at, imageUrl } = data;
 
   return (
@@ -17,7 +17,7 @@ export default function Post({ data }: { data: IBlog }) {
         className="w-full h-96 object-cover rounded-lg"
       />
       <div className="space-y-6">
-        <h1 className="leading-tight text-5xl font-bold ">{title}</h1>
+        <h1 className="leading-tight text-5xl font-bold mt-6">{title}</h1>
         <div className="">
           <div className="flex items-center md:space-x-2">
             {/* {authorImgUrl && (

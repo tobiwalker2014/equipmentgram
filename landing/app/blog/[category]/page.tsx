@@ -1,21 +1,27 @@
 "use client";
 
+import CustomLoader from "@/components/Loader";
 import { ArticleCard } from "@/components/sections/blog/article-card";
 import { useBlogByCategory } from "@/lib/network/blog";
 
 export default function CategoryRoute({ params }: { params: { category: string } }) {
   const { category } = params;
-  const { data } = useBlogByCategory(category);
+  const { data, isLoading } = useBlogByCategory(category);
+
+  if (isLoading) return <CustomLoader />;
 
   if (data?.length === 0) return <h2>no post found</h2>;
 
   console.log(data);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 max-w-screen-xl mx-auto container px-4 my-20">
-      {data?.map((article) => {
-        return <ArticleCard {...article} />;
-      })}
+    <div>
+      <h1 className="text-4xl text-center mt-10 font-bold">{category}</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3  gap-10 max-w-screen-xl mx-auto container px-4 my-20">
+        {data?.map((article) => {
+          return <ArticleCard {...article} />;
+        })}
+      </div>
     </div>
   );
 }
