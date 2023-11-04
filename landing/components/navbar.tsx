@@ -13,7 +13,6 @@ type Props = {};
 const Navbar = ({}: Props) => {
   const [opened, { open, close }] = useDisclosure();
   const { user } = useAuth();
-  console.log(user);
 
   return (
     <>

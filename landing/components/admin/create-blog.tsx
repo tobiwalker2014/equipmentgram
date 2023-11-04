@@ -1,9 +1,10 @@
 "use client";
 
-import { useCreateBlog } from "@/lib/network/blog";
-import { Button, Input, TextInput } from "@mantine/core";
+import { useCategories, useCreateBlog } from "@/lib/network/blog";
+import { Autocomplete, Button, Input, TextInput } from "@mantine/core";
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
+import UploadFileField from "../forms/upload-file-field";
 
 type Props = {};
 
@@ -11,26 +12,36 @@ const CreateBlog = ({}: Props) => {
   const editor = useRef(null);
   const [content, setContent] = useState<any>("");
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
 
   const mutation = useCreateBlog();
 
   const onCreateNewBlog = async () => {
     await mutation.mutateAsync({
       category: {
-        id: "1",
-        name: "test",
+        name: category,
       },
       content: content,
       created_at: new Date().toISOString(),
-      id: "1",
+
       title: title,
       updated_at: new Date().toISOString(),
     });
   };
 
+  const { data: categories } = useCategories();
+
   return (
     <div className="max-w-screen-lg space-y-4">
       <TextInput onChange={(e) => setTitle(e.currentTarget.value)} label="Title" placeholder="Title" />
+      <UploadFileField fileName={title} onUploadComplete={(url) => console.log(url)} />
+      <Autocomplete
+        label="Category"
+        placeholder="Pick value or enter anything"
+        data={categories?.map((category) => category.name)}
+        onChange={(value) => setCategory(value)}
+      />
+
       <div>
         <label className="text-md font-medium">Content</label>
         <JoditEditor
