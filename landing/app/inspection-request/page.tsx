@@ -12,6 +12,7 @@ import {
 } from "../../lib/network/inspection-requests";
 import { User } from "../../lib/network/users";
 import { InspectionRequestForm } from "@/components/forms/InspectionRequestForm";
+import { Button } from "@mantine/core";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
@@ -57,7 +58,7 @@ const InspectionRequest: NextPage = () => {
     }
   }, [inspectionRequest]);
 
-  const { mutateAsync } = useUpdateInspectionRequest();
+  const { mutateAsync, isLoading } = useUpdateInspectionRequest();
 
   return (
     <div className="container px-4 mx-auto max-w-screen-xl">
@@ -94,6 +95,7 @@ const InspectionRequest: NextPage = () => {
                   </svg>
                 </span>
                 Cancel Inspection Request
+                {/* <Button loading={isLoading}>Cancel Inspection Request</Button> */}
               </a>
             </div>
           </div>
