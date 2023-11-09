@@ -1,5 +1,6 @@
 "use client";
 
+import { InspectionRequestForm } from "@/components/forms/InspectionRequestForm";
 import { getDoc } from "@firebase/firestore";
 import type { NextPage } from "next";
 import React, { useEffect } from "react";
@@ -11,8 +12,7 @@ import {
   useUpdateInspectionRequest,
 } from "../../lib/network/inspection-requests";
 import { User } from "../../lib/network/users";
-import { InspectionRequestForm } from "@/components/forms/InspectionRequestForm";
-import { Button } from "@mantine/core";
+import PaymentStep from "@/components/payment-step";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
@@ -35,6 +35,9 @@ const InspectionRequest: NextPage = () => {
       switch (inspectionRequest?.step) {
         case Step.Schedule:
           setStep(Step.Schedule);
+          break;
+        case Step.Payment:
+          setStep(Step.Payment);
           break;
         case Step.Inspection:
           setStep(Step.Inspection);
@@ -67,6 +70,7 @@ const InspectionRequest: NextPage = () => {
           <StepWidget step={step} />
         </div>
       </section>
+      {step === Step.Payment && <PaymentStep />}
       {step === Step.Request && <InspectionRequestForm />}
       {step === Step.Schedule && (
         <section className="flex items-center justify-center py-2 bg-gray">

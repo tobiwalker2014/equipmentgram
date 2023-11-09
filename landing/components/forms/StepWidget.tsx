@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 export enum Step {
   Request = "Request",
+  Payment = "Payment",
   Schedule = "Schedule",
   Inspection = "Inspection",
   Results = "Results",

@@ -66,7 +66,7 @@ export const InspectionRequestForm = () => {
     const inspectionRequest: InspectionRequestObject = {
       ...data,
       user_id: user.claims.user_id,
-      step: Step.Schedule,
+      step: Step.Payment,
       created: serverTimestamp(),
       canceled: false,
     };
