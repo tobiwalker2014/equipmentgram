@@ -1,15 +1,15 @@
 "use client";
 
-import { NextPage } from "next";
-import React, { useState } from "react";
-import { Tab } from "../layout";
-import { useInspectionRequests, useInspectionRequestsForUser } from "@/lib/network/inspection-requests";
-import { useAuth } from "@/lib/authContext";
-import { Step } from "@/components/forms/StepWidget";
 import { InspectionItem } from "@/components/admin/InspectionItem";
+import { Step } from "@/components/forms/StepWidget";
+import { useAuth } from "@/lib/authContext";
+import { useInspectionRequests, useInspectionRequestsForUser } from "@/lib/network/inspection-requests";
+import { NextPage } from "next";
+import { useState } from "react";
+import { Tab } from "../layout";
 
 const InspectionRequests: NextPage = () => {
-  const [currentTab, setCurrentTab] = useState<Tab>(Tab.InspectionRequests);
+  // const [currentTab, setCurrentTab] = useState<Tab>(Tab.InspectionRequests);
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [sortBySubmitted, setSortBySubmitted] = useState<boolean>(false);
   const [sortByWaitTime, setSortByWaitTime] = useState<boolean>(false);

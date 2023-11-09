@@ -30,11 +30,11 @@ const PaymentStep = (props: Props) => {
             </div>
             <h2 className="mb-3 text-2xl font-semibold text-black sm:text-3xl">Payment</h2>
             <p className="mb-5 text-base text-body-color">
-              Please pay the inspection fee of $100 to continue. Once payment is complete, we will schedule your
+              Please pay the inspection fee of $699 to continue. Once payment is complete, we will schedule your
               inspection.
             </p>
             <Button onClick={pay} variant="transparent">
-              Pay $100
+              Pay $699
               <IconArrowRight />
             </Button>
           </div>

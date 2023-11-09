@@ -13,11 +13,14 @@ import {
 } from "../../lib/network/inspection-requests";
 import { User } from "../../lib/network/users";
 import PaymentStep from "@/components/payment-step";
+import CustomLoader from "@/components/Loader";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
-
-  const { data: inspectionRequestsForUser } = useInspectionRequestsForUser(user?.claims.user_id);
+  const { mutateAsync, isLoading } = useUpdateInspectionRequest();
+  const { data: inspectionRequestsForUser, isLoading: inspectionRequestsForUserLoading } = useInspectionRequestsForUser(
+    user?.claims.user_id
+  );
   const [inspectionRequest, setInspectionRequest] = React.useState<InspectionRequestObjectWithId | undefined>(
     undefined
   );
@@ -61,7 +64,7 @@ const InspectionRequest: NextPage = () => {
     }
   }, [inspectionRequest]);
 
-  const { mutateAsync, isLoading } = useUpdateInspectionRequest();
+  if (inspectionRequestsForUserLoading) return <CustomLoader />;
 
   return (
     <div className="container px-4 mx-auto max-w-screen-xl">
