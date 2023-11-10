@@ -73,7 +73,7 @@ const InspectionRequest: NextPage = () => {
           <StepWidget step={step} />
         </div>
       </section>
-      {step === Step.Payment && <PaymentStep />}
+      {step === Step.Payment && inspectionRequest && <PaymentStep inspectionRequestId={inspectionRequest.id} />}
       {step === Step.Request && <InspectionRequestForm />}
       {step === Step.Schedule && (
         <section className="flex items-center justify-center py-2 bg-gray">
@@ -87,7 +87,7 @@ const InspectionRequest: NextPage = () => {
                 Please allow 24-48 hours for us to review your request and schedule your inspection. We will send you an
                 email with the details of your inspection once it has been scheduled.
               </p>
-              <a
+              {/* <a
                 onClick={() => {
                   mutateAsync({
                     id: inspectionRequest?.id!,
@@ -102,8 +102,7 @@ const InspectionRequest: NextPage = () => {
                   </svg>
                 </span>
                 Cancel Inspection Request
-                {/* <Button loading={isLoading}>Cancel Inspection Request</Button> */}
-              </a>
+              </a> */}
             </div>
           </div>
         </section>
@@ -122,7 +121,7 @@ const InspectionRequest: NextPage = () => {
                 {inspectionRequest?.date?.toDate().toLocaleDateString()}. Please be available to meet them at the front
                 door.
               </p>
-              <a
+              {/* <a
                 onClick={() => {
                   mutateAsync({
                     id: inspectionRequest?.id!,
@@ -137,7 +136,7 @@ const InspectionRequest: NextPage = () => {
                   </svg>
                 </span>
                 Cancel Inspection Request
-              </a>
+              </a> */}
             </div>
           </div>
         </section>

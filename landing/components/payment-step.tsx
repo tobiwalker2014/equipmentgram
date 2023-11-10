@@ -1,9 +1,14 @@
+import { useAuth } from "@/lib/authContext";
 import { Button } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
-type Props = {};
+type Props = {
+  inspectionRequestId: string;
+};
 
-const PaymentStep = (props: Props) => {
+const PaymentStep = ({ inspectionRequestId }: Props) => {
+  const { user } = useAuth();
+
   const pay = async () => {
     await fetch("/api/payment", {
       method: "POST",
@@ -11,12 +16,17 @@ const PaymentStep = (props: Props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        priceId: "price_1OAGJgLlIjOxm5nrXKOa6SHX",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+        userId: user?.claims.user_id,
+        inspectionRequestId: inspectionRequestId,
       }),
     })
       .then((res) => res.json())
       .then((res) => {
         window.location.assign(res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
