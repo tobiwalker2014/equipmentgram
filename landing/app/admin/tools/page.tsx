@@ -1,9 +1,11 @@
 "use client";
 
-import CreateBlog from "@/components/admin/create-blog";
 import CreateCategory from "@/components/sections/blog/create-category";
 import { Tabs } from "@mantine/core";
+import dynamic from "next/dynamic";
 import React from "react";
+
+const CreateBlog = dynamic(() => import("@/components/admin/create-blog"), { ssr: false });
 
 type Props = {};
 
@@ -24,15 +26,6 @@ const AdminTools = (props: Props) => {
         </Tabs.Panel>
       </div>
     </Tabs>
-    // <div className="grid grid-cols-4 ">
-    //   <div>
-    //     <div>Create Category</div>
-    //     <div>Create Blog</div>
-    //   </div>
-    //   <div className="col-span-3">
-    //     <CreateBlog />
-    //   </div>
-    // </div>
   );
 };
 
