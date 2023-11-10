@@ -1,21 +1,21 @@
 "use client";
 
+import { useAuth } from "@/lib/authContext";
+import { db } from "@/lib/firebaseConfig/init";
+import { UserType, UsersCollection, useSetUser } from "@/lib/network/users";
+import { doc, getDoc } from "@firebase/firestore";
+import { Button, Divider, TextInput } from "@mantine/core";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import type { NextPage } from "next";
 import Head from "next/head";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendEmailVerification,
-} from "firebase/auth";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useRouter, usePathname, useParams } from "next/navigation";
-import React from "react";
-import { UserType, useSetUser } from "@/lib/network/users";
-import { useAuth } from "@/lib/authContext";
-import { addQueryParameters } from "@/lib/utils";
-import { Button, Divider, Input, TextInput } from "@mantine/core";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -36,16 +36,6 @@ const Home: NextPage = () => {
 
   const auth = getAuth();
 
-  function doRedirect() {
-    if (redirect) {
-      router.push(
-        addQueryParameters(redirect as string, {
-          fromSignin: "true",
-        })
-      );
-    }
-  }
-
   function login() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -53,16 +43,7 @@ const Home: NextPage = () => {
         const user = userCredential.user;
         console.log("success", user);
         console.log("redirect", redirect);
-        // mutateAsync({
-        //   user_id: user.uid,
-        //   email: user?.email!,
-        //   display_name: user?.displayName!,
-        //   photoURL: user?.photoURL!,
-        //   phoneNumber: user?.phoneNumber!,
-        //   emailVerified: user?.emailVerified!,
-        //   type: UserType.customer,
-        // });
-        doRedirect();
+        router.push("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -76,7 +57,7 @@ const Home: NextPage = () => {
     const googleProvider = new GoogleAuthProvider();
 
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
@@ -84,15 +65,23 @@ const Home: NextPage = () => {
         const user = result.user;
         console.log("sign with google", user);
         console.log("redirect", redirect);
-        mutateAsync({
-          user_id: user.uid,
-          email: user?.email!,
-          display_name: user?.displayName!,
-          photoURL: user?.photoURL!,
-          phoneNumber: user?.phoneNumber!,
-          emailVerified: user?.emailVerified!,
-          type: UserType.customer,
-        });
+
+        const docRef = doc(db, UsersCollection, user.uid);
+        const snapshot = await getDoc(docRef);
+
+        if (snapshot) {
+          console.log("user exists");
+        } else {
+          mutateAsync({
+            user_id: user.uid,
+            email: user?.email!,
+            display_name: user?.displayName!,
+            photoURL: user?.photoURL!,
+            phoneNumber: user?.phoneNumber!,
+            emailVerified: user?.emailVerified!,
+            type: UserType.customer,
+          });
+        }
 
         if (!user.emailVerified) {
           sendEmailVerification(auth.currentUser!).then(() => {
@@ -100,7 +89,7 @@ const Home: NextPage = () => {
           });
         }
 
-        doRedirect();
+        router.push("/");
       })
       .catch((error) => {
         console.log(error);
