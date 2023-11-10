@@ -1,16 +1,15 @@
-import Stripe from "stripe";
-import { NextRequest, NextResponse } from "next/server";
-import { doc, updateDoc } from "@firebase/firestore";
+import { Step } from "@/components/forms/StepWidget";
 import { db } from "@/lib/firebaseConfig/init";
 import { InspectionRequestsCollection } from "@/lib/network/inspection-requests";
-import { Step } from "@/components/forms/StepWidget";
-import { sendSlackMessage } from "@/lib/slack";
+import { doc, updateDoc } from "@firebase/firestore";
 import { WebClient } from "@slack/web-api";
+import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;
-
+const options = {};
+const slack = new WebClient(process.env.SLACK_OAUTH!, options);
 
 const webhookHandler = async (req: NextRequest) => {
     try {
@@ -42,9 +41,6 @@ const webhookHandler = async (req: NextRequest) => {
         console.log("✅ Success:", event.id);
         console.log("✅ EVENT TYPE:", event.type);
 
-
-
-
         // getting to the data we want from the event
         const payment = event.data.object as Stripe.PaymentIntent;
         const paymentId = payment.id;
@@ -64,21 +60,16 @@ const webhookHandler = async (req: NextRequest) => {
                     step: Step.Schedule,
                 });
 
-                const options = {};
-                const slack = new WebClient(process.env.SLACK_OAUTH!, options);
-
                 try {
                     await slack.conversations.join({
                         channel: process.env.SLACK_CHANNEL_ID!,
                     });
 
+
                     await slack.chat.postMessage({
-                        channel: "C065LPPS5UH",
-                        text: "New Inspection request received from ",
+                        channel: process.env.SLACK_CHANNEL_ID!,
+                        text: `New Inspection request received`,
                     })
-
-                    await sendSlackMessage("New Inspection request received", null);
-
                 } catch (error) {
                     console.log("SLACK ERROR", error);
                 }
