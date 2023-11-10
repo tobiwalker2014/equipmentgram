@@ -4,10 +4,13 @@ import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "@/lib/firebaseConfig/init";
 import { InspectionRequestsCollection } from "@/lib/network/inspection-requests";
 import { Step } from "@/components/forms/StepWidget";
+import { sendSlackMessage } from "@/lib/slack";
+import { WebClient } from "@slack/web-api";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;
+
 
 const webhookHandler = async (req: NextRequest) => {
     try {
@@ -39,6 +42,9 @@ const webhookHandler = async (req: NextRequest) => {
         console.log("✅ Success:", event.id);
         console.log("✅ EVENT TYPE:", event.type);
 
+
+
+
         // getting to the data we want from the event
         const payment = event.data.object as Stripe.PaymentIntent;
         const paymentId = payment.id;
@@ -57,6 +63,25 @@ const webhookHandler = async (req: NextRequest) => {
                     paymentId,
                     step: Step.Schedule,
                 });
+
+                const options = {};
+                const slack = new WebClient(process.env.SLACK_OAUTH!, options);
+
+                try {
+                    await slack.conversations.join({
+                        channel: process.env.SLACK_CHANNEL_ID!,
+                    });
+
+                    await slack.chat.postMessage({
+                        channel: "C065LPPS5UH",
+                        text: "New Inspection request received from ",
+                    })
+
+                    await sendSlackMessage("New Inspection request received", null);
+
+                } catch (error) {
+                    console.log("SLACK ERROR", error);
+                }
 
 
                 break;
