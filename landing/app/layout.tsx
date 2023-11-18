@@ -11,7 +11,10 @@ import colors from "tailwindcss/colors";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
+import "@mantine/notifications/styles.css";
+
 import "./globals.css";
+import { Notifications } from "@mantine/notifications";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
@@ -47,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 },
               }}
             >
+              <Notifications position="top-right" />
               <Navbar />
               <div>{children}</div>
               <Footer />

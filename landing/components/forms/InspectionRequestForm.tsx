@@ -8,6 +8,7 @@ import { useAuth } from "../../lib/authContext";
 import { useAddInspectionRequest } from "../../lib/network/inspection-requests";
 import { Step } from "./StepWidget";
 import { EquipmentManufacturer, EquipmentType, USStates } from "./formUtils";
+import { InspectionReportStatus } from "@/lib/network/forms";
 
 export type InspectionRequestObject = {
   user_id: string;
@@ -31,6 +32,7 @@ export type InspectionRequestObject = {
   step: Step;
   created: FieldValue;
   canceled: boolean;
+  reportStatus?: InspectionReportStatus;
 };
 
 const schema = yup.object().shape({

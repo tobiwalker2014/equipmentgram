@@ -7,7 +7,7 @@ import { UsersCollection } from "./users";
 
 export const InspectionRequestsCollection = "inspection-requests";
 
-export type InspectionRequestObjectWithId = Partial<InspectionRequestObject> & {
+export type InspectionRequestObjectWithId = InspectionRequestObject & {
   id: string;
 };
 
@@ -52,6 +52,13 @@ export const useAddInspectionRequest = () => {
   );
 };
 
+export enum InspectionReportStatus {
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
+  FilledForm = "FilledForm",
+}
+
 // To add an inspector to an inspection request, we simply set the inspectorRef to the user document
 // and set the step to "Inspection" to signify that the inspection request is ready to handle an inspection
 export const useAddInspectorToInspectionRequest = () => {
@@ -62,6 +69,7 @@ export const useAddInspectorToInspectionRequest = () => {
       return updateDoc(doc(db, InspectionRequestsCollection, inspection_request_id!), {
         inspectorRef: userDoc,
         step: Step.Inspection,
+        reportStatus: InspectionReportStatus.Pending,
       });
     },
     {
