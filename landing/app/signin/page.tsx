@@ -1,5 +1,6 @@
 "use client";
 
+import CustomLoader from "@/components/Loader";
 import { useAuth } from "@/lib/authContext";
 import { db } from "@/lib/firebaseConfig/init";
 import { UserType, UsersCollection, useSetUser } from "@/lib/network/users";
@@ -30,9 +31,12 @@ const Home: NextPage = () => {
   const redirect = query;
   const reffererMsg = query;
 
-  if (loading) return null;
+  if (loading) return <CustomLoader />;
 
-  if (user) return <h1>Authenticated</h1>;
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   const auth = getAuth();
 
