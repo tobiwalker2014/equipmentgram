@@ -1,5 +1,6 @@
 "use client";
 
+import CustomLoader from "@/components/Loader";
 import { useAuth } from "@/lib/authContext";
 import { UserType, useGetUser } from "@/lib/network/users";
 import { SegmentedControl } from "@mantine/core";
@@ -38,7 +39,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [value, setValue] = useState(path.split("/")[2]);
 
   const { user } = useAuth();
-  const { data: userData } = useGetUser(user?.claims.user_id as string);
+  const { data: userData, isLoading } = useGetUser(user?.claims.user_id as string);
+
+  if (isLoading) return <CustomLoader />;
 
   if (userData?.type !== UserType.admin) {
     router.push("/access-denied");
