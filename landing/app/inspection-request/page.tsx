@@ -17,7 +17,6 @@ import CustomLoader from "@/components/Loader";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
-  const { mutateAsync, isLoading } = useUpdateInspectionRequest();
   const { data: inspectionRequestsForUser, isLoading: inspectionRequestsForUserLoading } = useInspectionRequestsForUser(
     user?.claims.user_id
   );

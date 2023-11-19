@@ -40,7 +40,7 @@ const InspectionRequests: NextPage = () => {
             >
               <div className="space-y-4">
                 <Checkbox value={Step.Schedule} label="Schedule" />
-                <Checkbox value={Step.Inspection} label="Inspector" />
+                <Checkbox value={Step.Inspection} label="Inspection" />
                 <Checkbox value={Step.Payment} label="Payment" />
                 {/* <Checkbox value={Step.Request} label="Request" /> */}
                 <Checkbox value={Step.Results} label="Results" />
