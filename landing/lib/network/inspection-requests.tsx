@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, query, setDoc, updateDoc, where } from "@firebase/firestore";
+import { addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "@firebase/firestore";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { InspectionRequestObject } from "../../components/forms/InspectionRequestForm";
 import { Step } from "../../components/forms/StepWidget";
@@ -13,7 +13,9 @@ export type InspectionRequestObjectWithId = InspectionRequestObject & {
 
 export const useInspectionRequests = () => {
   return useQuery<InspectionRequestObjectWithId[], Error>([InspectionRequestsCollection], async () => {
-    const snapshot = await getDocs(collection(db, InspectionRequestsCollection));
+    const q = query(collection(db, InspectionRequestsCollection), orderBy("date", "desc")); // Assuming 'date' is the field you want to sort by
+    const snapshot = await getDocs(q);
+
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as InspectionRequestObjectWithId));
   });
 };
