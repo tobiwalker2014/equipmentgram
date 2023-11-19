@@ -24,7 +24,6 @@ const CreateBlog = ({}: Props) => {
       },
       content: content,
       created_at: new Date().toISOString(),
-
       title: title,
       updated_at: new Date().toISOString(),
     });
@@ -42,11 +41,12 @@ const CreateBlog = ({}: Props) => {
     <div className="max-w-screen-lg space-y-4">
       <h1 className=" font-bold">Create Blog</h1>
 
-      <TextInput onChange={(e) => setTitle(e.currentTarget.value)} label="Title" placeholder="Title" />
+      <TextInput value={title} onChange={(e) => setTitle(e.currentTarget.value)} label="Title" placeholder="Title" />
 
       <div className="grid grid-cols-2 gap-4">
         <UploadFileField fileName={title} onUploadComplete={(url) => setImageUrl(url)} />
         <Autocomplete
+          value={category}
           label="Category"
           placeholder="Pick value or enter anything"
           data={categories?.map((category) => category.name)}
@@ -65,7 +65,7 @@ const CreateBlog = ({}: Props) => {
           }}
           onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
           onChange={(newContent) => {
-            console.log(newContent);
+            // console.log(newContent);
           }}
         />
       </div>

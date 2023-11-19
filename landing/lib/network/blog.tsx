@@ -3,6 +3,7 @@
 import { addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from "@firebase/firestore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { db } from "../firebaseConfig/init";
+import { notifications } from "@mantine/notifications";
 
 export interface IBlog {
   title: string;
@@ -84,15 +85,32 @@ export const useUpdateBlog = () => {
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (category: string) => {
+    async (category: string) => {
+      // get category by name and if it exists, return it
+      // otherwise create new category
+      const q = query(collection(db, CategoriesCollection), where("name", "==", category));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.docs.length > 0) {
+        console.log(snapshot);
+
+        throw "Category already exists";
+      }
+
       return addDoc(collection(db, CategoriesCollection), {
         name: category,
       });
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([BlogsCollection]);
-        queryClient.refetchQueries([BlogsCollection]);
+        queryClient.invalidateQueries([CategoriesCollection]);
+        queryClient.refetchQueries([CategoriesCollection]);
+      },
+      onError: (error: string) => {
+        notifications.show({
+          message: <div>{error}</div>,
+          color: "red",
+        });
       },
     }
   );

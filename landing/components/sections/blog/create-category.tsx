@@ -24,6 +24,7 @@ const CreateCategory = (props: Props) => {
       >
         <TextInput
           label="Category Name"
+          value={name}
           onChange={(e) => {
             setName(e.currentTarget.value);
           }}
