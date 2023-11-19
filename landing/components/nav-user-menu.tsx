@@ -45,7 +45,10 @@ const NavUserMenu = (props: Props) => {
 
         <Menu.Divider />
         <Menu.Item
-          onClick={signOut}
+          onClick={async () => {
+            await signOut();
+            router.replace("/signin");
+          }}
           color="red"
           leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
         >

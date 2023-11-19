@@ -27,33 +27,32 @@ const Home: NextPage = () => {
   const { mutateAsync } = useSetUser();
   const { user, loading } = useAuth();
 
-  //   const { redirect, reffererMsg } = query as any;
-  const redirect = query;
-  const reffererMsg = query;
+  // if (loading) return <CustomLoader />;
 
-  if (loading) return <CustomLoader />;
-
-  if (user) {
-    router.push("/");
-    return null;
-  }
+  // if (user) {
+  //   router.push("/");
+  //   return null;
+  // }
 
   const auth = getAuth();
+  const [emailLoginLoadingState, setEmailLoginLoadingState] = useState(false);
 
   function login() {
+    setEmailLoginLoadingState(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log("success", user);
-        console.log("redirect", redirect);
+
         router.push("/");
+        setEmailLoginLoadingState(false);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("error", errorMessage);
         window.alert(errorMessage);
+        setEmailLoginLoadingState(false);
       });
   }
 
@@ -68,7 +67,6 @@ const Home: NextPage = () => {
         // The signed-in user info.
         const user = result.user;
         console.log("sign with google", user);
-        console.log("redirect", redirect);
 
         const docRef = doc(db, UsersCollection, user.uid);
         const snapshot = await getDoc(docRef);
@@ -115,11 +113,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="max-w-xs mx-auto md:my-20 my-10">
-        {reffererMsg && <p>{reffererMsg}</p>}
         <div className="space-y-4">
           <TextInput label="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
           <TextInput label="Passowrd" type="password" onChange={(e) => setPassword(e.target.value)} />
-          <Button fullWidth onClick={() => login()}>
+          <Button loading={emailLoginLoadingState} fullWidth onClick={() => login()}>
             Login
           </Button>
 
