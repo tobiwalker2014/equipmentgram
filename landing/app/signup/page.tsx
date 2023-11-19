@@ -1,5 +1,6 @@
 "use client";
 
+import CustomLoader from "@/components/Loader";
 import { USStates } from "@/components/forms/formUtils";
 import { useAuth } from "@/lib/authContext";
 import { UserType, useSetUser } from "@/lib/network/users";
@@ -14,6 +15,7 @@ import {
 } from "firebase/auth";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
 
@@ -27,6 +29,7 @@ const schema = Yup.object().shape({
 });
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -50,11 +53,16 @@ const Home: NextPage = () => {
     },
   });
 
-  if (loading) return null;
+  const auth = getAuth();
+
+  if (loading) return <CustomLoader />;
+
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   if (user) return <h1>Authenticated</h1>;
-
-  const auth = getAuth();
 
   async function createUserCredentials() {
     createUserWithEmailAndPassword(auth, values.email, values.password).then((userCredential) => {
