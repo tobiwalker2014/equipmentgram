@@ -62,7 +62,7 @@ const faqItems = [
       "The EquipmentGram inspection reports will be sent to your inbox once its ready and it would also be permanently available on the account dashboard which each customer signs up for. ",
   },
   {
-    question: "Who performs the inspections for EquipmentGram?",
+    question: "6. Who performs the inspections for EquipmentGram?",
     answer:
       "The inspections would be carried out in the meantime by equipment inspectors who would come to the location requested by customers for the equipment inspections. ",
   },
