@@ -25,9 +25,10 @@ export const useInspectionRequestsForUser = (user_id: string | undefined) => {
   return useQuery<InspectionRequestObjectWithId[], Error>(
     [InspectionRequestsCollection, user_id],
     async () => {
-      const q = await query(
+      const q = query(
         collection(db, InspectionRequestsCollection),
         where("user_id", "==", user_id),
+        where("step", "!=", "Complete"),
         where("canceled", "==", false)
       );
       const snapshot = await getDocs(q);
@@ -35,6 +36,8 @@ export const useInspectionRequestsForUser = (user_id: string | undefined) => {
     },
     {
       enabled: !!user_id,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
     }
   );
 };
