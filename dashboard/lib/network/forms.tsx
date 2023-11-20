@@ -71,23 +71,20 @@ export interface InspectionForm {
   inspectionRequestRef?: DocumentReference<DocumentData>;
 }
 
-function cleanse(obj: any, path?: any) {
-  Object.keys(obj).forEach(function (key) {
-    // Get this value and its type
-    var value = obj[key];
-    var type = typeof value;
-    if (type === "object") {
-      // Recurse...
-      cleanse(value);
-      // ...and remove if now "empty" (NOTE: insert your definition of "empty" here)
-      if (!Object.keys(value).length) {
+function cleanse(obj: any) {
+  for (var key in obj) {
+    if (obj[key] === undefined) {
+      delete obj[key];
+      continue;
+    }
+    if (obj[key] && typeof obj[key] === "object") {
+      cleanse(obj[key]);
+      if (!Object.keys(obj[key]).length) {
         delete obj[key];
       }
-    } else if (type === "undefined") {
-      // Undefined, remove it
-      delete obj[key];
     }
-  });
+  }
+  return obj;
 }
 
 export const useAddNewInspectionForm = (inspectionRequestId: string, userId: string) => {
@@ -116,10 +113,8 @@ export const useAddNewInspectionForm = (inspectionRequestId: string, userId: str
 
         const requestedByUserDoc = doc(db, UsersCollection, inspectionRequest.user_id);
 
-        cleanse(inspectionForm);
-
         const inspectionFormWithReferences = {
-          ...inspectionForm,
+          ...cleanse(inspectionForm),
           inspectionRequestRef: inspectionRequestDoc,
           userRef: userDoc,
           reportStatus: InspectionReportStatus.FilledForm,
