@@ -16,6 +16,8 @@ const NavUserMenu = (props: Props) => {
 
   if (!user) return null;
 
+  var dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL as string;
+
   return (
     <Menu withArrow>
       <Menu.Target>
@@ -29,7 +31,7 @@ const NavUserMenu = (props: Props) => {
           Profile
         </Menu.Item>
         <Menu.Item
-          onClick={() => router.push("https://www.dev.equipmentgram.com/")}
+          onClick={() => router.push(dashboardUrl)}
           leftSection={<IconLayoutDashboard style={{ width: rem(14), height: rem(14) }} />}
         >
           Dashboard
