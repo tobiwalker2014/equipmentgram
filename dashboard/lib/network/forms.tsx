@@ -5,6 +5,8 @@ import { db } from "../firebaseConfig/init";
 import { UserWithId, UsersCollection } from "./users";
 import { InspectionRequestsCollection } from "./inspection-requests";
 import { DocumentData } from "firebase-admin/firestore";
+import { useRouter } from "next/navigation";
+import { notifications } from "@mantine/notifications";
 
 export const InspectionFormsCollection = "inspection-forms";
 
@@ -33,6 +35,7 @@ export interface QuestionForm {
   };
   dateOfInspection?: any;
   timeOfInspection?: any;
+  inspectorName?: string;
 }
 export interface QuestionPage {
   name: string;
@@ -68,8 +71,28 @@ export interface InspectionForm {
   inspectionRequestRef?: DocumentReference<DocumentData>;
 }
 
+function cleanse(obj: any, path?: any) {
+  Object.keys(obj).forEach(function (key) {
+    // Get this value and its type
+    var value = obj[key];
+    var type = typeof value;
+    if (type === "object") {
+      // Recurse...
+      cleanse(value);
+      // ...and remove if now "empty" (NOTE: insert your definition of "empty" here)
+      if (!Object.keys(value).length) {
+        delete obj[key];
+      }
+    } else if (type === "undefined") {
+      // Undefined, remove it
+      delete obj[key];
+    }
+  });
+}
+
 export const useAddNewInspectionForm = (inspectionRequestId: string, userId: string) => {
   const queryClient = useQueryClient();
+  const navigation = useRouter();
 
   return useMutation(
     async (inspectionForm: InspectionForm): Promise<void> => {
@@ -93,6 +116,8 @@ export const useAddNewInspectionForm = (inspectionRequestId: string, userId: str
 
         const requestedByUserDoc = doc(db, UsersCollection, inspectionRequest.user_id);
 
+        cleanse(inspectionForm);
+
         const inspectionFormWithReferences = {
           ...inspectionForm,
           inspectionRequestRef: inspectionRequestDoc,
@@ -109,6 +134,13 @@ export const useAddNewInspectionForm = (inspectionRequestId: string, userId: str
       onSuccess: () => {
         queryClient.invalidateQueries([InspectionFormsCollection]);
         queryClient.refetchQueries([InspectionFormsCollection]);
+        navigation.push("/forms");
+      },
+      onError: (error) => {
+        notifications.show({
+          message: "Error creating inspection form. Please try again later.",
+          color: "red",
+        });
       },
     }
   );

@@ -29,8 +29,6 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
     getInputProps,
     onSubmit: handleSubmit,
     setFieldValue,
-    insertListItem,
-    setValues,
     validate,
     errors,
     values,
@@ -59,9 +57,9 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
           if (question.value === "Issues" && !question.comment) {
             acc[`pages.${currentStep - 1}.questions.${i}.comment`] = "Comment is required";
           }
-          if (!question.imageUrl) {
-            acc[`pages.${currentStep - 1}.questions.${i}.imageUrl`] = "Image is required";
-          }
+          // if (!question.imageUrl) {
+          //   acc[`pages.${currentStep - 1}.questions.${i}.imageUrl`] = "Image is required";
+          // }
 
           return acc;
         }, {});
@@ -78,8 +76,6 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
       line2: "",
     },
   });
-
-  const navigation = useRouter();
 
   const nextStep = async () => {
     const { hasErrors, errors } = validate();
@@ -121,7 +117,6 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
         zip: data.zip,
       },
     });
-    navigation.push("/forms");
   };
 
   const currentQuestions = questionForm.pages[currentStep - 1];
@@ -136,7 +131,7 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
         <ul className="space-y-4">
           {currentStep === 0 && (
             <>
-              <TextInput name="inspector" label="Inspector Name" value={user?.displayName!} disabled />
+              <TextInput label="Inspector Name" {...getInputProps("inspectorName")} />
               <TextInput label="Name Of Business at Which Inspection Took Place" {...getInputProps("nameOfBusiness")} />
               <TextInput label="Customer Email" {...getInputProps("customerEmail")} />
               <h1 className="text-sm font-bold">Address Of Inspection Location: </h1>
@@ -166,7 +161,6 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
                 <div className="radio-group">
                   <Radio.Group
                     label={question.label}
-                    // defaultValue="Good"
                     {...getInputProps(`pages.${currentStep - 1}.questions.${i}.value`)}
                   >
                     <Group mt="xs">
