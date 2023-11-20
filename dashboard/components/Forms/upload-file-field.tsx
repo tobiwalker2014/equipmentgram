@@ -7,9 +7,10 @@ import { useState } from "react";
 type Props = {
   onUploadComplete: (url: string) => void;
   fileName: string;
+  error?: string;
 };
 
-const UploadFileField = ({ onUploadComplete, fileName }: Props) => {
+const UploadFileField = ({ onUploadComplete, fileName, error }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const onDropFile = (file: FileWithPath[]) => {
@@ -45,9 +46,17 @@ const UploadFileField = ({ onUploadComplete, fileName }: Props) => {
   };
 
   return (
-    <Dropzone w="200px" p={6} maxFiles={1} loading={loading} accept={IMAGE_MIME_TYPE} onDrop={onDropFile}>
-      <Text ta="center">Upload Image</Text>
-    </Dropzone>
+    <>
+      <Dropzone w="200px" p={6} maxFiles={1} loading={loading} accept={IMAGE_MIME_TYPE} onDrop={onDropFile}>
+        <Text ta="center">Upload Image</Text>
+      </Dropzone>
+
+      {error && (
+        <Text size="xs" mt={4} color="red">
+          {error}
+        </Text>
+      )}
+    </>
   );
 };
 
