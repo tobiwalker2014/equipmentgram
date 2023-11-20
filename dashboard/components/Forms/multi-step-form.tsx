@@ -57,9 +57,9 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
           if (question.value === "Issues" && !question.comment) {
             acc[`pages.${currentStep - 1}.questions.${i}.comment`] = "Comment is required";
           }
-          // if (!question.imageUrl) {
-          //   acc[`pages.${currentStep - 1}.questions.${i}.imageUrl`] = "Image is required";
-          // }
+          if (!question.imageUrl) {
+            acc[`pages.${currentStep - 1}.questions.${i}.imageUrl`] = "Image is required";
+          }
 
           return acc;
         }, {});
