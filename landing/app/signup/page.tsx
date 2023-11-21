@@ -69,7 +69,7 @@ const Home: NextPage = () => {
         // Signed in
         const user = userCredential.user;
         console.log("success", user);
-        mutate({
+        mutateAsync({
           user_id: user.uid,
           email: user?.email!,
           display_name: values.firstName + " " + values.lastName,
@@ -121,7 +121,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="w-full px-4 md:w-1/2 m-auto my-10 md:my-20">
-        <h1 className="mb-8 text-2xl">Individual Registration</h1>
+        <h1 className="mb-8 font-bold text-center text-2xl">Individual Registration</h1>
         <form onSubmit={onSubmit(createUserCredentials)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <TextInput label="First Name" placeholder="First Name" {...getInputProps("firstName")} />

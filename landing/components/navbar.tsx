@@ -81,14 +81,18 @@ const Navbar = ({}: Props) => {
 
           <Divider />
 
-          <div className="grid grid-cols-2 gap-2">
-            <Link href="/signin">
-              <Button variant="outline">Sign In</Button>
-            </Link>
-            <Link href="/signup">
-              <Button>Sign Up</Button>
-            </Link>
-          </div>
+          {!user && (
+            <div className="grid grid-cols-2 gap-2">
+              <Link href="/signin">
+                <Button fullWidth variant="outline">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button fullWidth>Sign Up</Button>
+              </Link>
+            </div>
+          )}
         </ul>
       </Drawer>
     </>
