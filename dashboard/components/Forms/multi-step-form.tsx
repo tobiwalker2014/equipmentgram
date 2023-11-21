@@ -107,8 +107,17 @@ const MultiStepForm = ({ questionForm, onSubmit }: Props) => {
     }
 
     console.log("Final Form Data:", data);
+
     onSubmit({
       ...data,
+      // removed empty comments
+      pages: data.pages.map((page) => ({
+        ...page,
+        comment: page.comment || "",
+        questions: page.questions.map((question) => ({
+          ...question,
+        })),
+      })),
       address: {
         line1: data.line1,
         line2: data.line2 || "",

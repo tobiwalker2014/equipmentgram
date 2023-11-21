@@ -71,22 +71,6 @@ export interface InspectionForm {
   inspectionRequestRef?: DocumentReference<DocumentData>;
 }
 
-function cleanse(obj: any) {
-  for (var key in obj) {
-    if (obj[key] === undefined) {
-      delete obj[key];
-      continue;
-    }
-    if (obj[key] && typeof obj[key] === "object") {
-      cleanse(obj[key]);
-      if (!Object.keys(obj[key]).length) {
-        delete obj[key];
-      }
-    }
-  }
-  return obj;
-}
-
 export const useAddNewInspectionForm = (inspectionRequestId: string, userId: string) => {
   const queryClient = useQueryClient();
   const navigation = useRouter();
@@ -114,7 +98,7 @@ export const useAddNewInspectionForm = (inspectionRequestId: string, userId: str
         const requestedByUserDoc = doc(db, UsersCollection, inspectionRequest.user_id);
 
         const inspectionFormWithReferences = {
-          ...cleanse(inspectionForm),
+          ...inspectionForm,
           inspectionRequestRef: inspectionRequestDoc,
           userRef: userDoc,
           reportStatus: InspectionReportStatus.FilledForm,
