@@ -18,6 +18,8 @@ import CustomLoader from "@/components/Loader";
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
 
+  if (loading) return <CustomLoader />;
+
   if (!user) {
     return (
       <div className="container px-4 mx-auto max-w-screen-xl">
