@@ -157,7 +157,7 @@ export const InspectionRequestForm = () => {
             </div>
             <div className="text-center">
               <Button className="my-10 text-center" type="submit" loading={isMutationLoading} size="lg">
-                {isMutationLoading ? "Submitting" : "Submit Request"}
+                Submit Request
               </Button>
             </div>
           </form>

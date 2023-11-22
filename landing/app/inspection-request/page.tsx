@@ -14,6 +14,7 @@ import {
 import { User } from "../../lib/network/users";
 import PaymentStep from "@/components/payment-step";
 import CustomLoader from "@/components/Loader";
+import { Button } from "@mantine/core";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
@@ -100,7 +101,7 @@ const InspectionRequest: NextPage = () => {
           <StepWidget step={step} />
         </div>
       </section>
-      {step === Step.Payment && inspectionRequest && <PaymentStep inspectionRequestId={inspectionRequest.id} />}
+      {step === Step.Payment && inspectionRequest && <PaymentStep inspectionRequest={inspectionRequest} />}
       {step === Step.Request && <InspectionRequestForm />}
       {step === Step.Schedule && (
         <section className="flex items-center justify-center py-2 bg-gray">
@@ -144,18 +145,23 @@ const InspectionRequest: NextPage = () => {
 
 export default InspectionRequest;
 
-function CancelInspectionRequest({ inspectionRequest }: { inspectionRequest: InspectionRequestObjectWithId }) {
+export const CancelInspectionRequest = ({
+  inspectionRequest,
+}: {
+  inspectionRequest: InspectionRequestObjectWithId;
+}) => {
   const { mutateAsync, isLoading } = useUpdateInspectionRequest();
 
   return (
-    <a
+    <Button
+      loading={isLoading}
+      variant="transparent"
       onClick={() => {
         mutateAsync({
           ...inspectionRequest,
           canceled: true,
         });
       }}
-      className="inline-flex items-center text-base font-medium cursor-pointer text-primary hover:text-black"
     >
       <span className="pl-2 transform rotate-180">
         <svg width="20" height="20" viewBox="0 0 20 20" className="fill-current">
@@ -163,6 +169,6 @@ function CancelInspectionRequest({ inspectionRequest }: { inspectionRequest: Ins
         </svg>
       </span>
       Cancel Inspection Request
-    </a>
+    </Button>
   );
-}
+};

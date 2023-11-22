@@ -1,12 +1,14 @@
+import { CancelInspectionRequest } from "@/app/inspection-request/page";
 import { useAuth } from "@/lib/authContext";
+import { InspectionRequestObjectWithId } from "@/lib/network/inspection-requests";
 import { Button } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 type Props = {
-  inspectionRequestId: string;
+  inspectionRequest: InspectionRequestObjectWithId;
 };
 
-const PaymentStep = ({ inspectionRequestId }: Props) => {
+const PaymentStep = ({ inspectionRequest }: Props) => {
   const { user } = useAuth();
 
   const pay = async () => {
@@ -18,7 +20,7 @@ const PaymentStep = ({ inspectionRequestId }: Props) => {
       body: JSON.stringify({
         priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
         userId: user?.claims.user_id,
-        inspectionRequestId: inspectionRequestId,
+        inspectionRequestId: inspectionRequest.id,
       }),
     })
       .then((res) => res.json())
@@ -43,10 +45,13 @@ const PaymentStep = ({ inspectionRequestId }: Props) => {
               Please pay the inspection fee of $699 to continue. Once payment is complete, we will schedule your
               inspection.
             </p>
-            <Button onClick={pay} variant="transparent">
-              Pay $699
-              <IconArrowRight />
-            </Button>
+            <div className="flex flex-col">
+              <CancelInspectionRequest inspectionRequest={inspectionRequest} />
+              <Button onClick={pay} variant="transparent">
+                Pay $699
+                <IconArrowRight />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
