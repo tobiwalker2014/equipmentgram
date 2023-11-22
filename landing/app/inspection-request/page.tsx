@@ -17,6 +17,32 @@ import CustomLoader from "@/components/Loader";
 
 const InspectionRequest: NextPage = () => {
   const { user, loading } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="container px-4 mx-auto max-w-screen-xl">
+        <section className="overflow-hidden py-10 lg:py-[80px]">
+          <div className="px-4 mx-auto sm:container">
+            <StepWidget step={Step.Request} />
+          </div>
+        </section>
+        <section className="flex items-center justify-center py-2 bg-gray">
+          <div className="container mx-auto">
+            <div className="mx-auto max-w-[600px] rounded-[10px] bg-white p-10 text-center shadow-card md:py-[55px] md:px-[70px]">
+              <div className="mx-auto text-center mb-14">
+                <img src="/schedule.svg" alt="Schedule image" className="w-full max-w-full mx-auto" />
+              </div>
+              <h2 className="mb-3 text-2xl font-semibold text-black sm:text-3xl">Please log in to continue.</h2>
+              <p className="mb-5 text-base text-body-color">
+                You must be logged in to request an inspection. Please log in to continue.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   const { data: inspectionRequestsForUser, isLoading: inspectionRequestsForUserLoading } = useInspectionRequestsForUser(
     user?.claims.user_id
   );
@@ -86,7 +112,7 @@ const InspectionRequest: NextPage = () => {
                 Please allow 24-48 hours for us to review your request and schedule your inspection. We will send you an
                 email with the details of your inspection once it has been scheduled.
               </p>
-              <CancelInspectionRequest inspectionRequest={inspectionRequest!} />
+              {/* <CancelInspectionRequest inspectionRequest={inspectionRequest!} /> */}
             </div>
           </div>
         </section>
@@ -105,7 +131,7 @@ const InspectionRequest: NextPage = () => {
                 {inspectionRequest?.date?.toDate().toLocaleDateString()}. Please be available to meet them at the front
                 door.
               </p>
-              <CancelInspectionRequest inspectionRequest={inspectionRequest!} />
+              {/* <CancelInspectionRequest inspectionRequest={inspectionRequest!} /> */}
             </div>
           </div>
         </section>
