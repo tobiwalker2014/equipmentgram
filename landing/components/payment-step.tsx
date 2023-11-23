@@ -1,8 +1,8 @@
-import { CancelInspectionRequest } from "@/app/inspection-request/page";
 import { useAuth } from "@/lib/authContext";
 import { InspectionRequestObjectWithId } from "@/lib/network/inspection-requests";
 import { Button } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
+import { CancelInspectionRequest } from "@/components/CancelInspectionRequest";
 
 type Props = {
   inspectionRequest: InspectionRequestObjectWithId;
