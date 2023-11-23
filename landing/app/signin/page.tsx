@@ -1,13 +1,12 @@
 "use client";
 
-import CustomLoader from "@/components/Loader";
-import { useAuth } from "@/lib/authContext";
 import { db } from "@/lib/firebaseConfig/init";
 import { UserType, UsersCollection, useSetUser } from "@/lib/network/users";
 import { doc, getDoc } from "@firebase/firestore";
 import { Button, Divider, TextInput } from "@mantine/core";
 import {
   GoogleAuthProvider,
+  User,
   getAuth,
   sendEmailVerification,
   signInWithEmailAndPassword,
@@ -15,24 +14,14 @@ import {
 } from "firebase/auth";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const params = useParams();
-  const { query } = params;
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { mutateAsync } = useSetUser();
-  const { user, loading } = useAuth();
-
-  // if (loading) return <CustomLoader />;
-
-  // if (user) {
-  //   router.push("/");
-  //   return null;
-  // }
 
   const auth = getAuth();
   const [emailLoginLoadingState, setEmailLoginLoadingState] = useState(false);
@@ -43,6 +32,8 @@ const Home: NextPage = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+
+        updateUserAfterLogin(user);
 
         router.push("/");
         setEmailLoginLoadingState(false);
@@ -68,28 +59,7 @@ const Home: NextPage = () => {
         const user = result.user;
         console.log("sign with google", user);
 
-        const docRef = doc(db, UsersCollection, user.uid);
-        const snapshot = await getDoc(docRef);
-
-        if (snapshot) {
-          console.log("user exists");
-        } else {
-          mutateAsync({
-            user_id: user.uid,
-            email: user?.email!,
-            display_name: user?.displayName!,
-            photoURL: user?.photoURL!,
-            phoneNumber: user?.phoneNumber!,
-            emailVerified: user?.emailVerified!,
-            type: UserType.customer,
-          });
-        }
-
-        if (!user.emailVerified) {
-          sendEmailVerification(auth.currentUser!).then(() => {
-            console.log("email sent");
-          });
-        }
+        await updateUserAfterLogin(user);
 
         router.push("/");
       })
@@ -104,6 +74,40 @@ const Home: NextPage = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
+  }
+
+  async function updateUserAfterLogin(user: User) {
+    const docRef = doc(db, UsersCollection, user.uid);
+    const snapshot = await getDoc(docRef);
+
+    if (snapshot.exists()) {
+      console.log("user exists");
+      mutateAsync({
+        user_id: user.uid,
+        email: user?.email!,
+        display_name: user?.displayName!,
+        photoURL: user?.photoURL!,
+        phoneNumber: user?.phoneNumber!,
+        type: snapshot.data()?.type!,
+        emailVerified: user?.emailVerified!,
+      });
+    } else {
+      mutateAsync({
+        user_id: user.uid,
+        email: user?.email!,
+        display_name: user?.displayName!,
+        photoURL: user?.photoURL!,
+        phoneNumber: user?.phoneNumber!,
+        type: UserType.customer,
+        emailVerified: user?.emailVerified!,
+      });
+    }
+
+    if (!user.emailVerified) {
+      sendEmailVerification(auth.currentUser!).then(() => {
+        console.log("email sent");
+      });
+    }
   }
 
   return (
