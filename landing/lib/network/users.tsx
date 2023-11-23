@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "@firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "@firebase/firestore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { db } from "../firebaseConfig/init";
 
@@ -68,10 +68,18 @@ export const useGetUser = (user_id: string | undefined) => {
     [UsersCollection, user_id],
     async () => {
       const docRef = doc(db, UsersCollection, user_id!);
-      const snapshot = await getDoc(docRef);
-      return snapshot.data() as User;
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data() as User;
+      } else {
+        console.log("No such document!");
+        throw "no such document";
+      }
     },
     {
+      onError: (error) => {
+        console.table(error);
+      },
       enabled: !!user_id,
     }
   );
@@ -83,11 +91,16 @@ export const useSetUser = () => {
     (user: User) => {
       const docRef = doc(db, UsersCollection, user.user_id);
       return setDoc(docRef, user);
+
+      // return addDoc(collection(db, UsersCollection, user.id), user);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([UsersCollection]);
         queryClient.refetchQueries([UsersCollection]);
+      },
+      onError: (error) => {
+        console.table(error);
       },
     }
   );
@@ -102,8 +115,11 @@ export const useUpdateUser = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([UsersCollection]);
-        queryClient.refetchQueries([UsersCollection]);
+        // queryClient.invalidateQueries([UsersCollection]);
+        // queryClient.refetchQueries([UsersCollection]);
+      },
+      onError: (error) => {
+        console.table(error);
       },
     }
   );

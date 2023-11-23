@@ -61,17 +61,17 @@ const authContext = createContext<UserContext>({
 export default function AuthContextProvider({ children }: Props) {
   const [user, setUser] = useState<TIdTokenResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const { mutateAsync } = useUpdateUser();
+  // const { mutateAsync } = useUpdateUser();
   useEffect(() => {
     const auth = getAuth(firebaseApp);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       //user returned from firebase not the state
-      if (user && user.emailVerified) {
-        mutateAsync({
-          emailVerified: true,
-          user_id: user.uid,
-        });
-      }
+      // if (user && user.emailVerified) {
+      //   mutateAsync({
+      //     emailVerified: true,
+      //     user_id: user.uid,
+      //   });
+      // }
 
       if (user) {
         // Save token for backend calls
@@ -79,13 +79,11 @@ export default function AuthContextProvider({ children }: Props) {
           setCookie(null, "idToken", token, {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
-          }),
+          })
         );
 
         // Save decoded token on the state
-        user
-          .getIdTokenResult()
-          .then((result) => setUser(result as unknown as TIdTokenResult));
+        user.getIdTokenResult().then((result) => setUser(result as unknown as TIdTokenResult));
       }
       if (!user) setUser(null);
       setLoading(false);
@@ -94,11 +92,7 @@ export default function AuthContextProvider({ children }: Props) {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <authContext.Provider value={{ user, loading }}>
-      {children}
-    </authContext.Provider>
-  );
+  return <authContext.Provider value={{ user, loading }}>{children}</authContext.Provider>;
 }
 
 export const useAuth = () => useContext(authContext);
