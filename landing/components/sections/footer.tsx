@@ -22,9 +22,9 @@ const Footer = (props: Props) => {
                   .filter((link) => link.title !== "Contact Us")
                   .map((link, i) => (
                     <li className="mb-4" key={i}>
-                      <a href={link.link} className="hover:underline">
+                      <Link href={link.link} className="hover:underline">
                         {link.title}
-                      </a>
+                      </Link>
                     </li>
                   ))}
               </ul>

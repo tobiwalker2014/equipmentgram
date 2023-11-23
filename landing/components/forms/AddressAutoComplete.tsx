@@ -1,16 +1,9 @@
+import { TextInput } from "@mantine/core";
 import React, { useState, useCallback } from "react";
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-places-autocomplete";
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 
 interface LocationSearchInputProps {
-  onAddressSelect: (address: {
-    streetAddress: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  }) => void;
+  onAddressSelect: (address: { streetAddress: string; city: string; state: string; zipCode: string }) => void;
   placeholder: string;
   address: string;
   setAddress: (address: string) => void;
@@ -33,17 +26,13 @@ function LocationSearchInput({
           const addressComponents = results[0].address_components;
           const streetAddress = `${addressComponents[0].long_name} ${addressComponents[1].long_name}`;
           // @ts-ignore
-          const city = addressComponents?.find((component) =>
-            component.types.includes("locality")
-          ).long_name;
+          const city = addressComponents?.find((component) => component.types.includes("locality")).long_name;
           // @ts-ignore
           const state = addressComponents?.find((component) =>
             component.types.includes("administrative_area_level_1")
           ).long_name;
           // @ts-ignore
-          const zipCode = addressComponents?.find((component) =>
-            component.types.includes("postal_code")
-          ).long_name;
+          const zipCode = addressComponents?.find((component) => component.types.includes("postal_code")).long_name;
           const selectedAddress = { streetAddress, city, state, zipCode };
           if (onAddressSelect) {
             onAddressSelect(selectedAddress);
@@ -59,24 +48,23 @@ function LocationSearchInput({
   const renderSuggestions = useCallback(
     ({ getInputProps, suggestions, getSuggestionItemProps, loading }: any) => (
       <div className="w-full relative">
-        <input
+        <TextInput
           required
+          label="Street Address"
           {...getInputProps({
             placeholder,
             className:
-              "location-search-input text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded border border-[#EBEBEB] bg-white py-3 px-[14px] text-base leading-relaxed outline-none focus-visible:shadow-none md:py-4 md:px-[18px]",
+              "location-search-input text-body-color placeholder:text-body-color/50 focus:border-primary w-full rounded  bg-white  text-base leading-relaxed outline-none focus-visible:shadow-none ",
           })}
         />
-        <div className="autocomplete-dropdown-container bg-white absolute shadow-card rounded top-[62px] z-50 [&>*]:p-2">
+        <div className="autocomplete-dropdown-container bg-white   w-full max-w-full mt-2 absolute shadow-card rounded overflow-hidden top-[62px] z-50 [&>*]:p-2">
           {loading && <div className="text-body-color">Loading...</div>}
           {suggestions.map((suggestion: any) => {
             const className = suggestion.active
-              ? "suggestion-item--active text-body-color"
-              : "suggestion-item text-body-color";
+              ? "suggestion-item--active text-white w-full bg-blue-700"
+              : "suggestion-item text-body-color w-full bg-gray-50 ";
             // inline style for demonstration purpose
-            const style = suggestion.active
-              ? { backgroundColor: "#fafafa", cursor: "pointer" }
-              : { backgroundColor: "#ffffff", cursor: "pointer" };
+            const style = suggestion.active ? { cursor: "pointer" } : { cursor: "pointer" };
             return (
               <div
                 key={suggestion.description}
@@ -96,11 +84,7 @@ function LocationSearchInput({
   );
 
   return (
-    <PlacesAutocomplete
-      value={address}
-      onChange={handleChange}
-      onSelect={handleSelect}
-    >
+    <PlacesAutocomplete value={address} onChange={handleChange} onSelect={handleSelect}>
       {renderSuggestions}
     </PlacesAutocomplete>
   );

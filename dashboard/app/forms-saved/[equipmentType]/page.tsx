@@ -19,7 +19,7 @@ function ViewSavedFormListByTypePage({ params, searchParams }: ViewSavedFormList
   const { data: userData } = useGetUser(user?.uid);
 
   const { data, isLoading } = useGetInspectionFormByType(
-    params.equipmentType,
+    params.equipmentType.replace(/%20/g, " "),
     user?.uid!,
     userData?.type === UserType.customer ? true : false
   );

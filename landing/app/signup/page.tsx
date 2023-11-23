@@ -1,5 +1,6 @@
 "use client";
 
+import CustomLoader from "@/components/Loader";
 import { USStates } from "@/components/forms/formUtils";
 import { useAuth } from "@/lib/authContext";
 import { UserType, useSetUser } from "@/lib/network/users";
@@ -14,6 +15,7 @@ import {
 } from "firebase/auth";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
 
@@ -27,10 +29,9 @@ const schema = Yup.object().shape({
 });
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const { user, loading } = useAuth();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const { mutateAsync } = useSetUser();
+  const { mutate, mutateAsync, isLoading: isLoadingSetUser } = useSetUser();
   const { getInputProps, onSubmit, values } = useForm({
     validate: yupResolver(schema),
     initialValues: {
@@ -50,70 +51,68 @@ const Home: NextPage = () => {
     },
   });
 
-  if (loading) return null;
-
-  if (user) return <h1>Authenticated</h1>;
-
   const auth = getAuth();
 
+  // if (loading) return <CustomLoader />;
+
+  // if (user) {
+  //   router.push("/");
+  //   return null;
+  // }
+
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+
   async function createUserCredentials() {
-    createUserWithEmailAndPassword(auth, values.email, values.password).then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("success", user);
-      mutateAsync({
-        user_id: user.uid,
-        email: user?.email!,
-        display_name: values.firstName + " " + values.lastName,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        address: {
-          city: values.city,
-          state: values.state,
-          zip: values.zipCode,
-          line1: values.addressLine1,
-          line2: values.addressLine2,
-        },
-        nameOfBusiness: values.nameOfBusiness,
-        jobTitle: values.jobTitle,
-        photoURL: user?.photoURL!,
-        phoneNumber: user?.phoneNumber!,
-        emailVerified: user?.emailVerified!,
-        type: UserType.customer,
-      });
-
-      if (!user.emailVerified) {
-        sendEmailVerification(auth.currentUser!).then(() => {
-          console.log("email sent");
+    setIsCreatingUser(true);
+    createUserWithEmailAndPassword(auth, values.email, values.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("success", user);
+        mutateAsync({
+          user_id: user.uid,
+          email: user?.email!,
+          display_name: values.firstName + " " + values.lastName,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          address: {
+            city: values.city,
+            state: values.state,
+            zip: values.zipCode,
+            line1: values.addressLine1,
+            line2: values.addressLine2,
+          },
+          nameOfBusiness: values.nameOfBusiness,
+          jobTitle: values.jobTitle,
+          photoURL: user?.photoURL!,
+          phoneNumber: user?.phoneNumber!,
+          emailVerified: user?.emailVerified!,
+          type: UserType.customer,
         });
-      }
-    });
-  }
 
-  function loginWithGoogle() {
-    const googleProvider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log("sign with google", user);
-        // ...
+        if (!user.emailVerified) {
+          sendEmailVerification(auth.currentUser!).then(() => {
+            console.log("email sent");
+          });
+        }
+      })
+      .then(() => {
+        setIsCreatingUser(false);
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log("error", error);
+        setIsCreatingUser(false);
       });
   }
+
+  if (loading) return <CustomLoader />;
+
+  if (user) {
+    router.push("/");
+    return null;
+  }
+
+  if (user) return <h1>Authenticated</h1>;
 
   return (
     <>
@@ -122,7 +121,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="w-full px-4 md:w-1/2 m-auto my-10 md:my-20">
-        <h1 className="mb-8 text-2xl">Individual Registration</h1>
+        <h1 className="mb-8 font-bold text-center text-2xl">Individual Registration</h1>
         <form onSubmit={onSubmit(createUserCredentials)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <TextInput label="First Name" placeholder="First Name" {...getInputProps("firstName")} />
@@ -167,7 +166,9 @@ const Home: NextPage = () => {
           </div>
           <TextInput label="Job/Job Title" {...getInputProps("jobTitle")} />
 
-          <Button type="submit">Submit</Button>
+          <Button loading={isCreatingUser || isLoadingSetUser} type="submit">
+            Submit
+          </Button>
         </form>
         {/* <div>
           <button onClick={() => loginWithGoogle()}>Login with Google</button>

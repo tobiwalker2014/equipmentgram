@@ -64,9 +64,9 @@ export function SideNav() {
           <Badge color="blue" radius={0} className="absolute top-4 left-0">
             {userData?.type}
           </Badge>
-          <Avatar size="xl" mb="md" src={user?.photoURL} />
-          <Text>{user?.displayName}</Text>
-          <Text>{user?.email}</Text>
+          <Avatar size="xl" mb="md" src={userData?.photoURL} />
+          <Text>{userData?.display_name}</Text>
+          <Text>{userData?.email}</Text>
         </div>
         <div className="pt-4">{links}</div>
       </div>

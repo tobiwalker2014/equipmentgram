@@ -3,7 +3,7 @@
 import { signOut, useAuth } from "@/lib/authContext";
 import { UserType, useGetUser } from "@/lib/network/users";
 import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
-import { IconAddressBook, IconLogout, IconSettings, IconUser, IconUserBolt } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconLogout, IconUser, IconUserBolt } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import React, { forwardRef } from "react";
 
@@ -15,6 +15,8 @@ const NavUserMenu = (props: Props) => {
   const router = useRouter();
 
   if (!user) return null;
+
+  var dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL as string;
 
   return (
     <Menu withArrow>
@@ -29,16 +31,10 @@ const NavUserMenu = (props: Props) => {
           Profile
         </Menu.Item>
         <Menu.Item
-          onClick={() => router.push("/my-contacts")}
-          leftSection={<IconAddressBook style={{ width: rem(14), height: rem(14) }} />}
+          onClick={() => router.push(dashboardUrl)}
+          leftSection={<IconLayoutDashboard style={{ width: rem(14), height: rem(14) }} />}
         >
-          Contact
-        </Menu.Item>
-        <Menu.Item
-          onClick={() => router.push("/account-settings")}
-          leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
-        >
-          Settings
+          Dashboard
         </Menu.Item>
         {userData?.type === UserType.admin && (
           <Menu.Item
@@ -51,7 +47,10 @@ const NavUserMenu = (props: Props) => {
 
         <Menu.Divider />
         <Menu.Item
-          onClick={signOut}
+          onClick={async () => {
+            await signOut();
+            router.replace("/signin");
+          }}
           color="red"
           leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
         >
