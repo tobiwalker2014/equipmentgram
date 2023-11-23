@@ -1,6 +1,7 @@
 "use client";
 
 import CustomLoader from "@/components/Loader";
+import NoBlogFound from "@/components/NoBlogFound";
 import { ArticleCard } from "@/components/sections/blog/article-card";
 import { useBlogs } from "@/lib/network/blog";
 
@@ -11,7 +12,7 @@ const BlogPage = (props: Props) => {
 
   if (isLoading) return <CustomLoader />;
 
-  if (data?.length === 0) return <h2>no post found</h2>;
+  if (data?.length === 0) return <NoBlogFound />;
 
   console.log(data);
 
