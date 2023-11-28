@@ -4,12 +4,22 @@ import { InspectionRequestsCollection } from "@/lib/network/inspection-requests"
 import { doc, updateDoc } from "@firebase/firestore";
 import { WebClient } from "@slack/web-api";
 import { NextRequest, NextResponse } from "next/server";
+import Cors from 'micro-cors';
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;
 const options = {};
 const slack = new WebClient(process.env.SLACK_OAUTH!, options);
+
+
+
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+}
+
 
 const webhookHandler = async (req: NextRequest) => {
     try {
@@ -99,4 +109,9 @@ const webhookHandler = async (req: NextRequest) => {
     }
 };
 
-export { webhookHandler as POST };
+
+const cors = Cors({
+    allowMethods: ['POST', 'HEAD'],
+});
+// ...
+export default cors(webhookHandler as any);
