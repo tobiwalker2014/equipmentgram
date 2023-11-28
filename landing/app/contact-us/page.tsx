@@ -9,7 +9,14 @@ type Props = {};
 
 const ContactUs = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { reset, getInputProps, onSubmit } = useForm();
+  const { reset, getInputProps, onSubmit, onReset } = useForm({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
+  });
 
   const onSubmitForm = async (data: any) => {
     setIsLoading(true);
@@ -23,8 +30,7 @@ const ContactUs = (props: Props) => {
           message: data.message,
         }),
       });
-      close();
-      reset();
+
       notifications.show({
         title: "Contact us message sent successfully",
         message: " We will get back to you soon",
@@ -39,6 +45,8 @@ const ContactUs = (props: Props) => {
         color: "red",
       });
       setIsLoading(false);
+    } finally {
+      reset();
     }
   };
 
