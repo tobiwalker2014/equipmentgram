@@ -14,7 +14,7 @@ const slack = new WebClient(process.env.SLACK_OAUTH!, options);
 
 
 
-export const config = {
+const config = {
     api: {
         bodyParser: false,
     },
