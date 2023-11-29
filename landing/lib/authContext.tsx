@@ -63,10 +63,18 @@ export default function AuthContextProvider({ children }: Props) {
   // const { mutateAsync } = useUpdateUser();
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const cookies = parseCookies();
+      if (user && !cookies.idToken && cookies.logoutAll === "1") {
+        await signOut();
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       if (user) {
         // Save token for backend calls
-        user.getIdToken().then((token) =>
+        await user.getIdToken().then((token) =>
           setCookie(null, "idToken", token, {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
@@ -81,12 +89,6 @@ export default function AuthContextProvider({ children }: Props) {
 
       setLoading(false);
     });
-
-    const cookies = parseCookies();
-    if (user && !cookies.idToken) {
-      signOut();
-    }
-
     return () => unsubscribe();
   }, []);
 
@@ -98,5 +100,6 @@ export const useAuth = () => useContext(authContext);
 export const signOut = async () => {
   const auth = getAuth();
   destroyCookie(null, "idToken");
+  destroyCookie(null, "logoutAll");
   await signout(auth);
 };
