@@ -104,7 +104,7 @@ const Home: NextPage = () => {
     }
 
     if (!user.emailVerified) {
-      sendEmailVerification(auth.currentUser!).then(() => {
+      await sendEmailVerification(auth.currentUser!).then(() => {
         console.log("email sent");
       });
     }

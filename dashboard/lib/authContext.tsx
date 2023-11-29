@@ -2,7 +2,7 @@ import CustomLoader from "@/components/CustomLoader";
 import { MantineProvider } from "@mantine/core";
 import { Auth, User, getAuth, onAuthStateChanged, signInWithCustomToken, signOut as signout } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { destroyCookie, parseCookies } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import firebaseApp from "./firebaseConfig/init";
 
@@ -85,7 +85,13 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
 };
 
 export const signOut = async () => {
-  const auth = getAuth();
   destroyCookie(null, "idToken");
+  setCookie(null, "logoutAll", "1", {
+    maxAge: 30 * 24 * 60 * 60,
+    path: "/",
+    domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost",
+  });
+
+  const auth = getAuth();
   await signout(auth);
 };

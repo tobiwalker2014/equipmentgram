@@ -75,8 +75,8 @@ export function SideNav() {
         <a
           href="#"
           className={classes.link}
-          onClick={() => {
-            signOut();
+          onClick={async () => {
+            await signOut();
             navigation.push(process.env.NEXT_PUBLIC_REDIRECT_URL as string);
           }}
         >
