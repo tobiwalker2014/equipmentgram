@@ -1,10 +1,9 @@
 "use client";
 
 import { getAuth, onAuthStateChanged, signOut as signout } from "firebase/auth";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import firebaseApp from "./firebaseConfig/init";
-import { useUpdateUser } from "./network/users";
 export type TIdTokenResult = {
   name: string;
   iss: string;
@@ -64,15 +63,7 @@ export default function AuthContextProvider({ children }: Props) {
   // const { mutateAsync } = useUpdateUser();
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      //user returned from firebase not the state
-      // if (user && user.emailVerified) {
-      //   mutateAsync({
-      //     emailVerified: true,
-      //     user_id: user.uid,
-      //   });
-      // }
-
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // Save token for backend calls
         user.getIdToken().then((token) =>
@@ -87,6 +78,12 @@ export default function AuthContextProvider({ children }: Props) {
         user.getIdTokenResult().then((result) => setUser(result as unknown as TIdTokenResult));
       }
       if (!user) setUser(null);
+
+      const cookies = parseCookies();
+      if (user && !cookies.idToken) {
+        await signOut();
+      }
+
       setLoading(false);
     });
 
