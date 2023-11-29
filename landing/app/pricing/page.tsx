@@ -2,6 +2,12 @@ import { Button } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EquipmentGram - Pricing",
+};
+
 type Props = {};
 
 const features = [

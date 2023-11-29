@@ -2,6 +2,12 @@ import React from "react";
 
 type Props = {};
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EquipmentGram - Access Denied",
+};
+
 const AccessDenied = (props: Props) => {
   return (
     <div>

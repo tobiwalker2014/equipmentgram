@@ -3,7 +3,7 @@
 import Navbar from "@/components/navbar";
 import Footer from "@/components/sections/footer";
 import FirebaseProvider from "@/lib/authContext";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript, MantineProvider, Title } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Inter } from "next/font/google";
 import colors from "tailwindcss/colors";
@@ -15,9 +15,14 @@ import "@mantine/notifications/styles.css";
 
 import "./globals.css";
 import { Notifications } from "@mantine/notifications";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
+
+const metadata = {
+  title: "EquipmentGram",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
