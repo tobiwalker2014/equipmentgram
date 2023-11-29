@@ -79,6 +79,7 @@ export default function AuthContextProvider({ children }: Props) {
           setCookie(null, "idToken", token, {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
+            domain: ".equipmentgram.com",
           })
         );
 
