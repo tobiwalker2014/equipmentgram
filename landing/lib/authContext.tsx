@@ -63,14 +63,14 @@ export default function AuthContextProvider({ children }: Props) {
   // const { mutateAsync } = useUpdateUser();
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // Save token for backend calls
         user.getIdToken().then((token) =>
           setCookie(null, "idToken", token, {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
-            domain: ".equipmentgram.com",
+            domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost",
           })
         );
 
@@ -79,13 +79,13 @@ export default function AuthContextProvider({ children }: Props) {
       }
       if (!user) setUser(null);
 
-      const cookies = parseCookies();
-      if (user && !cookies.idToken) {
-        await signOut();
-      }
-
       setLoading(false);
     });
+
+    const cookies = parseCookies();
+    if (user && !cookies.idToken) {
+      signOut();
+    }
 
     return () => unsubscribe();
   }, []);
