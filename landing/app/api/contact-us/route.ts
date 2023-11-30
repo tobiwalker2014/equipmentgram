@@ -22,11 +22,11 @@ export async function POST(request: Request) {
 
 
         await slack.conversations.join({
-            channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
+            channel: process.env.SLACK_CHANNEL_ID_CONTACT!,
         });
 
         await slack.chat.postMessage({
-            channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
+            channel: process.env.SLACK_CHANNEL_ID_CONTACT!,
             text: `New contact us form from ${name} .\nEmail: ${email} .\nPhone: ${phone} .\nMessage: ${message}`,
         })
 
