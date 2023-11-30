@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
-const slack = new WebClient(process.env.SLACK_OAUTH!, {});
+const slack = new WebClient(process.env.SLACK_OAUTH_CONTACT!, {});
 
 export async function POST(request: Request) {
     const { email, message, name, phone } = await request.json() as ContactUsEmailProps;
@@ -22,11 +22,11 @@ export async function POST(request: Request) {
 
 
         await slack.conversations.join({
-            channel: process.env.SLACK_CHANNEL_ID!,
+            channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
         });
 
         await slack.chat.postMessage({
-            channel: process.env.SLACK_CHANNEL_ID!,
+            channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
             text: `New contact us form from ${name} .\nEmail: ${email} .\nPhone: ${phone} .\nMessage: ${message}`,
         })
 

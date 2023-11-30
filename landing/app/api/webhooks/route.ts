@@ -9,7 +9,7 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;
 const options = {};
-const slack = new WebClient(process.env.SLACK_OAUTH!, options);
+const slack = new WebClient(process.env.SLACK_OAUTH_INSPECTION!, options);
 
 
 const webhookHandler = async (req: NextRequest) => {
