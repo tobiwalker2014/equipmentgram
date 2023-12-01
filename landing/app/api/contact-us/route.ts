@@ -31,9 +31,6 @@ export async function POST(request: Request) {
         })
 
 
-
-
-
         return NextResponse.json({
             status: 'Ok'
         }, {
@@ -41,7 +38,7 @@ export async function POST(request: Request) {
         })
     } catch (e: unknown) {
         if (e instanceof Error) {
-            console.log(`Failed to send email: ${e.message}`);
+            console.log(`Failed to send email/slack message  : ${e.message}`);
         }
         return NextResponse.json({
             error: 'Internal server error.'
