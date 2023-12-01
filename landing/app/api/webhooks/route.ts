@@ -63,12 +63,12 @@ const webhookHandler = async (req: NextRequest) => {
 
                 try {
                     await slack.conversations.join({
-                        channel: process.env.SLACK_CHANNEL_ID!,
+                        channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
                     });
 
 
                     await slack.chat.postMessage({
-                        channel: process.env.SLACK_CHANNEL_ID!,
+                        channel: process.env.SLACK_CHANNEL_ID_INSPECTION!,
                         text: `New Inspection request received`,
                     })
                 } catch (error) {
