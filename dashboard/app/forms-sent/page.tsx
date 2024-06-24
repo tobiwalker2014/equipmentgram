@@ -6,6 +6,12 @@ import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EquipmentGram - Sent Forms",
+};
+
 type Props = {};
 
 const FormsSentPage = (props: Props) => {

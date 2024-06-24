@@ -6,6 +6,12 @@ import { useGetNotification } from "@/lib/network/notification";
 import { Notification } from "@mantine/core";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EquipmentGram - Notifications",
+};
+
 type Props = {};
 
 const Notifications = (props: Props) => {
